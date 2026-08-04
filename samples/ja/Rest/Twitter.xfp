@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2011-12-07T11:14:11.733 JST" fb:idSeq="4" fb:version="1.0" id="2dc7a495-9dc9-4f97-8511-921db823e8da" name="Twitter" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6778</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow2" name="ShowTweets">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">false</fe:Property>
+		<fe:Property name="HttpExecute">true</fe:Property>
+		<fb:Description height="17" visible="false" width="177" x="0" y="0">
+			<fb:Property name="Text">ヘッダとレコードをExcelファイルに設定</fb:Property>
+		</fb:Description>
+		<fb:Description height="69" width="416" x="86" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">Twitterより検索条件にあうTweetを指定件数だけ取得してHTMLページを返します 
+
+※このフローを「実行設定」でURLトリガーに登録して、ブラウザより実行してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="HttpStart1" type="HttpStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="QueryEncoding">utf-8</fe:Property>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:AdditionalProp name="Cookie">
+				<fe:Row Name="Columns" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="ParameterList">
+					<fe:FieldDef>
+						<fe:Field name="Page" type="String"/>
+						<fe:Field name="RPP" type="String"/>
+						<fe:Field name="query" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="322" name="Velocity1" type="HTML (Output)">
+			<fb:Description height="32" visible="true" width="273" x="88" y="325">
+				<fb:Property name="Text">レコードストリームよりHTMLページを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Mode">Inline</fe:Property>
+			<fe:Property name="Template">##値を表示するためのマクロ
+##数値はカンマ区切りにする
+##日付は「yyyy/MM/dd HH:mm:ss」形式にする
+##文字列はmaxLenよりも長い場合は切り詰める
+#set ($format = '#,##0')
+#macro (printValue $value $maxLen)
+#set ($type = $value.Type.toString())
+#if ($type == "Integer")
+$sys.formatDecimal($value, $format)
+#elseif ($type == "Decimal")
+$sys.formatDecimal($value, $format)
+#elseif ($type == "DateTime")
+#set ($temp = $sys.formatDate($value, "yyyy/MM/dd HH:mm:ss"))
+#if ($temp.endsWith("00:00:00"))
+#set ($tempLen = $temp.length() - 8)
+#set ($temp = $temp.substring(0, $tempLen))
+#end
+$temp
+#elseif ($maxLen != 0 &amp;&amp; $value.strValue().length() &gt; $maxLen)
+${value.strValue().substring(0, $maxLen)}...
+#elseif ($value.strValue().length() == 0)
+&amp;nbsp;
+#else
+$value
+#end
+#end
+&lt;html&gt;
+&lt;head&gt;
+&lt;style type="text/css"&gt;
+&lt;!--
+h1{
+	color : white;
+	padding : 4px 0 4px 8px; 
+	background-color : #333333;
+	font-size : 150% ;
+}
+th{
+	background-color : #888888 ;
+	color : #000022;
+}
+.container {
+	padding: 10px 10px 20px 10px ;
+}
+
+.user {
+	font-weight: bold;
+	background-color : #cccccc ;
+	color : #000022;
+	padding: 3px 3px 3px 3px ;
+}
+.contents {
+	color : #333333;
+	padding: 3px 3px 3px 5px ;
+}
+--&gt;
+&lt;/style&gt;
+&lt;script&gt;
+&lt;!--
+function doSubmit(spos) {
+	form = document.searchForm;
+	form.Page.value = spos;
+	form.submit();
+}
+
+--&gt;
+&lt;/script&gt;
+
+#set ($title = "Search Tweets")
+&lt;title&gt;$title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;$title&lt;/h1&gt;
+##ナビゲーター
+#set ($navi = "　　")
+#if ($flow.Page.intValue() != 1)
+    #set ($prev = $flow.Page.intValue() - 1)
+    #if ($prev &lt;= 0) 
+      #set ($prev = 1) 
+    #end
+    #set ($navi = "$navi&lt;a href='javascript:doSubmit(1)'&gt;先頭&lt;/a&gt;　")
+    #set ($navi = "$navi&lt;a href='javascript:doSubmit($prev)'&gt;前へ&lt;/a&gt;　　　　")
+#else
+    #set ($navi = "$navi先頭　前へ　　　　")
+#end
+#set ($next = $flow.Page.intValue() + 1)
+#set ($navi = "$navi&lt;a href='javascript:doSubmit($next)'&gt;次へ&lt;/a&gt;　")
+#set ($navi = "&lt;div&gt;$navi&lt;/div&gt;")
+##検索フォーム
+#set ($pathPos = $system.RequestURL.strValue().lastIndexOf('/') + 1)
+&lt;form name="searchForm" action="$system.RequestURL.strValue().substring($pathPos)" method="post"&gt;
+&lt;input type="hidden" name="Page" value="$flow.Page"&gt;
+&lt;table border="0" style="font-size:smaller;width:80%;"&gt;
+&lt;tr&gt;
+	&lt;th&gt;検索文字列&lt;/th&gt;&lt;td&gt;&lt;input name="query" value="$!flow.get("query")" size="60"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+	&lt;td colspan="2"&gt;
+		表示行数　
+		&lt;select name="RPP"&gt;
+			&lt;option value="50"   #if($flow.RPP.intValue() == 50)  selected #end&gt;50&lt;/option&gt;
+			&lt;option value="100"  #if($flow.RPP.intValue() == 100) selected #end&gt;100&lt;/option&gt;
+			&lt;option value="1000" #if($flow.RPP.intValue() == 1000)selected #end&gt;1000&lt;/option&gt;
+		&lt;/select&gt;　　
+		&lt;input type="button" onclick="doSubmit($flow.Page)" value="再表示"&gt;　　
+	&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/form&gt;
+$navi
+##レコードの表示
+&lt;div&gt;
+#foreach ($r in $in.records)
+	&lt;div class="container"&gt;&lt;div class="user"&gt;$r.field("user")&lt;/div&gt;&lt;div class="contents"&gt;$r.field("contents")&lt;/div&gt;&lt;/div&gt;
+#end
+&lt;/div&gt;
+$navi
+&lt;/body&gt;
+&lt;/html&gt;
+
+</fe:Property>
+			<fe:Property name="TemplateFilename">ShowImages/OutputHTML.vm</fe:Property>
+			<fe:Property name="TemplateHome">Relative</fe:Property>
+			<fe:Property name="TemplateEncoding">utf-8</fe:Property>
+			<fe:Property name="XPathVariablePrefix">fv</fe:Property>
+			<fe:Output>
+				<fe:Stream format="HTML">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="HttpEnd1" type="HttpEnd">
+			<fb:Description height="17" visible="true" width="161" x="88" y="427">
+				<fb:Property name="Text">作成したHTMLページを返します</fb:Property>
+			</fb:Description>
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="ContentType">(AutoDetect)</fe:Property>
+			<fe:Property name="Location"/>
+			<fe:Property name="Download" unfold="true">
+				<fe:Property name="FileName"/>
+			</fe:Property>
+			<fe:Property name="JSONPCallback"/>
+			<fe:AdditionalProp name="Cookie">
+				<fe:Row Name="Columns" Type="String"/>
+				<fe:Row Name="expires" Type="DateTime"/>
+				<fe:Row Name="path" Type="String"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="SubFlow1" type="SubFlow2">
+			<fb:Description height="30" visible="true" width="314" x="88" y="223">
+				<fb:Property name="Text">QueryTweetsフローを実行し、検索条件にヒットしたTweet情報をレコードストリームとして受けとります</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">QueryTweets</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:AdditionalProp name="Param">
+				<fe:Row Name="query" Type="String"/>
+				<fe:Row Default="50" Name="rpp" Type="Integer"/>
+				<fe:Row Default="1" Name="page" Type="Integer"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="id" type="String"/>
+						<fe:Field name="user" type="String"/>
+						<fe:Field name="contents" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="353" x="88" y="121">
+				<fb:Property name="Text">urlパラメーターとして受け取った値、もしくはデフォルト値をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="526" fb:y="288" name="NullCheck1" type="NullCheck">
+						<mp:Property name="AllowEmptyString">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link2</mp:Item>
+							<mp:Item>Link9</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="390" fb:y="288" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="16" x="390" y="324">
+							<fb:Property name="Text">50</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">50</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="526" fb:y="186" name="NullCheck2" type="NullCheck">
+						<mp:Property name="AllowEmptyString">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link10</mp:Item>
+							<mp:Item>Link11</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="390" fb:y="186" name="Const2" type="CONST">
+						<fb:Description height="17" visible="true" width="16" x="390" y="220">
+							<fb:Property name="Text">1</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">1</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="526" fb:y="50" name="NullCheck3" type="NullCheck">
+						<mp:Property name="AllowEmptyString">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link12</mp:Item>
+							<mp:Item>Link7</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="390" fb:y="84" name="Const3" type="CONST">
+						<fb:Description height="17" visible="true" width="52" x="390" y="118">
+							<fb:Property name="Text">ASTERIA</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">ASTERIA</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:HttpStart1/SD:F/RPP"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input name="NullCheck1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:SubFlow1/Param/rpp"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input name="Const1"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:HttpStart1/SD:F/Page"/>
+						<mp:Output name="NullCheck2"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link11">
+						<mp:Input name="Const2"/>
+						<mp:Output name="NullCheck2"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="NullCheck2"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:SubFlow1/Param/page"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input name="Const3"/>
+						<mp:Output name="NullCheck3"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link1">
+						<mp:Input name="NullCheck3"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:SubFlow1/Param/query"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="NullCheck2"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/Page"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="NullCheck1"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/RPP"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input name="NullCheck3"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/query"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link12">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:HttpStart1/SD:F/query"/>
+						<mp:Output name="NullCheck3"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="SubFlow1"/>
+			<fe:Output name="Velocity1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="HttpStart1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="SubFlow1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Velocity1"/>
+			<fe:Output name="HttpEnd1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" default="1" description="開始位置" name="Page" type="Integer"/>
+			<fe:Field access="private" default="50" description="HTMLでの表示行数" name="RPP" type="Integer"/>
+			<fe:Field access="private" description="検索条件" name="query" type="String"/>
+		</fe:Variables>
+		<fe:SystemVariables>
+			<fe:Field name="RequestURL"/>
+		</fe:SystemVariables>
+	</fe:Flow>
+	<fe:Flow id="Flow1" name="QueryTweets">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="64" width="343" x="84" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">Twitterから指定の検索条件を含むTweetを検索します
+
+※ShowTweetsフローのサブフローとして実行します</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="258" x="85" y="119">
+				<fb:Property name="Text">検索条件、ページ、表示件数をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="FV/query"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:REST1/URLParameters/q"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/rpp"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:REST1/URLParameters/rpp"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="FV/page"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:REST1/URLParameters/page"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="REST1" type="REST">
+			<fb:Description height="30" visible="true" width="316" x="85" y="222">
+				<fb:Property name="Text">Twitterの検索用サーバーに対してパラメーターを送信します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="HTTPException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection"/>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property name="URL">http://search.twitter.com/search.atom</fe:Property>
+				<fe:Property name="URLEncoding">utf-8</fe:Property>
+				<fe:Property name="Timeout">60</fe:Property>
+				<fe:Property name="BasicAuth" unfold="true">
+					<fe:Property name="Username"/>
+					<fe:Property name="Password"/>
+				</fe:Property>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="Path"/>
+			<fe:Property name="HTTPMethod">GET</fe:Property>
+			<fe:Property name="AdditionalAhead">Stream</fe:Property>
+			<fe:Property name="HTTPVersion">HTTP/1.1</fe:Property>
+			<fe:Property name="RetryCount">3</fe:Property>
+			<fe:Property name="RetryInterval">1</fe:Property>
+			<fe:Property name="FollowRedirects">true</fe:Property>
+			<fe:AdditionalProp name="URLParameters">
+				<fe:Row Default="ASTERIA WARP" Name="q" Type="String"/>
+				<fe:Row Default="ja" Name="lang" Type="String"/>
+				<fe:Row Default="ja" Name="locale" Type="String"/>
+				<fe:Row Name="page" Type="String"/>
+				<fe:Row Default="100" Name="rpp" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">NWS&amp;Indent</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef>
+						<fe:Namespace prefix="a" uri="http://www.w3.org/2005/Atom"/>
+						<fe:Namespace prefix="google" uri="http://base.google.com/ns/1.0"/>
+						<fe:Namespace prefix="twitter" uri="http://api.twitter.com/"/>
+						<fe:Namespace prefix="openSearch" uri="http://a9.com/-/spec/opensearch/1.1/"/>
+						<fe:Namespace prefix="georss" uri="http://www.georss.org/georss"/>
+						<fe:Field expanded="true" name="a:feed" nodeType="Element" repeat="false" type="String">
+							<fe:Field name="xml:lang" nodeType="Attribute" repeat="false" type="String"/>
+							<fe:Field name="a:id" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field expanded="true" name="a:link" nodeType="Element" repeat="true" type="String">
+								<fe:Field name="href" nodeType="Attribute" repeat="false" type="String"/>
+								<fe:Field name="rel" nodeType="Attribute" repeat="false" type="String"/>
+								<fe:Field name="type" nodeType="Attribute" repeat="false" type="String"/>
+							</fe:Field>
+							<fe:Field name="a:title" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field name="a:updated" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field name="openSearch:itemsPerPage" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field name="openSearch:language" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field expanded="true" name="a:entry" nodeType="Element" repeat="true" type="String">
+								<fe:Field name="a:id" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field name="a:published" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field expanded="true" name="a:link" nodeType="Element" repeat="true" type="String">
+									<fe:Field name="href" nodeType="Attribute" repeat="false" type="String"/>
+									<fe:Field name="rel" nodeType="Attribute" repeat="false" type="String"/>
+									<fe:Field name="type" nodeType="Attribute" repeat="false" type="String"/>
+								</fe:Field>
+								<fe:Field name="a:title" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field expanded="true" name="a:content" nodeType="Element" repeat="false" type="String">
+									<fe:Field name="type" nodeType="Attribute" repeat="false" type="String"/>
+								</fe:Field>
+								<fe:Field name="a:updated" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field name="twitter:geo" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field expanded="true" name="twitter:metadata" nodeType="Element" repeat="false" type="String">
+									<fe:Field name="twitter:result_type" nodeType="Element" repeat="false" type="String"/>
+								</fe:Field>
+								<fe:Field name="twitter:source" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field name="twitter:lang" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field expanded="true" name="a:author" nodeType="Element" repeat="false" type="String">
+									<fe:Field name="a:name" nodeType="Element" repeat="false" type="String"/>
+									<fe:Field name="a:uri" nodeType="Element" repeat="false" type="String"/>
+								</fe:Field>
+							</fe:Field>
+						</fe:Field>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="322" name="Mapper2" type="Mapper2">
+			<fb:Description height="85" visible="true" width="279" x="84" y="321">
+				<fb:Property name="Text">取得した情報から、id、ユーザー名、tweet内容を取得し、レコードストリームを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/a:feed/a:entry/a:id"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/id"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/a:feed/a:entry/a:author/a:name"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/user"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/a:feed/a:entry/a:content"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/contents"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="id" type="String"/>
+						<fe:Field name="user" type="String"/>
+						<fe:Field name="contents" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="EndResponse1" type="EndResponse">
+			<fb:Description height="17" visible="true" width="180" x="85" y="429">
+				<fb:Property name="Text">作成したレコードストリームを返します</fb:Property>
+			</fb:Description>
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="424" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="322" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="30" visible="true" width="225" x="459" y="323">
+				<fb:Property name="Text">検証用として、検索結果として取得したXMLをファイルとして保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">twittersearch.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="REST1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="REST1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="REST1"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field name="query" type="String"/>
+			<fe:Field default="50" name="rpp" type="Integer"/>
+			<fe:Field default="1" name="page" type="Integer"/>
+		</fe:Variables>
+	</fe:Flow>
+</fe:Project>

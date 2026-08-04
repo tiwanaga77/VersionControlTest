@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-27T16:00:08.773 JST" fb:idSeq="3" fb:version="1.0" id="77b5fac2-4c3a-44c3-9296-8a233a12d88b" name="Mail" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6836</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6838</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="添付ファイルつきメールの送信">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" visible="false" width="207" x="0" y="0"/>
+		<fb:Description height="56" width="201" x="120" y="16">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SimpleMailコンポーネントで添付ファイルつきのメールを送信します
+Mail-SMTPという名前のSMTPコネクションを作成してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="152" fb:y="118" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="156" x="188" y="118">
+				<fb:Property name="Text">添付ファイルを取得します
+添付ファイルはdata/test.txtです</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/mailtest.txt</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="254" name="SimpleMail1" type="SimpleMail">
+			<fb:Description height="43" visible="true" width="205" x="82" y="254">
+				<fb:Property name="Background">4000ff00</fb:Property>
+				<fb:Property name="Text">「差出人」と「宛先」を設定してください
+「本文」と「添付ファイル」は入力ストリームで設定しています
+</fb:Property>
+			</fb:Description>
+			<fb:Property name="Icon">mail2.png</fb:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Connection">Mail-SMTP</fe:Property>
+			<fe:Property name="From"/>
+			<fe:Property name="To"/>
+			<fe:Property name="Cc"/>
+			<fe:Property name="Bcc"/>
+			<fe:Property name="Subject">test</fe:Property>
+			<fe:Property name="UseStream">true</fe:Property>
+			<fe:Property name="Body">test body</fe:Property>
+			<fe:Property name="KeepConnection">true</fe:Property>
+			<fe:Property designer="true" name="Attachment">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper1" type="Mapper2">
+			<fb:Description height="17" visible="true" width="94" x="52" y="118">
+				<fb:Property name="Text">本文を作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="16" fb:y="50" name="Now1" type="NOW">
+						<mp:Property name="Format">yyyy/MM/dd</mp:Property>
+						<mp:Property name="TruncateTime">true</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Now1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="FileGet1"/>
+			<fe:Output connector="Attachment" name="SimpleMail1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="SimpleMail1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="SimpleMail1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="メールの複数送信">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="56" width="201" x="118" y="16">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">CSVファイルに保存されている複数の宛先へメールを送信します
+Mail-SMTPという名前のSMTPコネクションを作成してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="69" visible="true" width="243" x="86" y="119">
+				<fb:Property name="Background">4000ff00</fb:Property>
+				<fb:Property name="Text">data/address.csv に名前とメールアドレスが保存されています
+１行ずつEndコンポーネントまでの処理をループします
+※フローを実行するときはメールアドレスを修正してください</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/address.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="name" type="String"/>
+						<fe:Field name="mail" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="187" x="51" y="220">
+				<fb:Property name="Text">宛先と本文をマッピングします
+本文はEmbed関数で作成しています</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="84" fb:y="118" name="Embed1" type="EMBED">
+						<mp:Property name="Data">${input1} 様&#xd;
+&#xd;
+セミナーのお知らせ&#xd;
+&#xd;
+日付：${input2}</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link3</mp:Item>
+							<mp:Item>Link4</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="16" fb:y="152" name="Now1" type="NOW">
+						<mp:Property name="Format">yyyy/MM/dd</mp:Property>
+						<mp:Property name="TruncateTime">false</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="16" fb:y="220" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="91" x="16" y="256">
+							<fb:Property name="Text">セミナーのお知らせ</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">セミナーのお知らせ</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/mail"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:SimpleMail1/To"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/name"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="Now1"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="Const1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:SimpleMail1/Subject"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="SimpleMail1" type="SimpleMail">
+			<fb:Description height="34" visible="true" width="198" x="52" y="288">
+				<fb:Property name="Background">4000ff00</fb:Property>
+				<fb:Property name="Text">「差出人」を設定してください
+「本文」は入力ストリームで設定しています</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Connection">Mail-SMTP</fe:Property>
+			<fe:Property name="From"/>
+			<fe:Property name="To"/>
+			<fe:Property name="Cc"/>
+			<fe:Property name="Bcc"/>
+			<fe:Property name="Subject"/>
+			<fe:Property name="UseStream">true</fe:Property>
+			<fe:Property name="Body"/>
+			<fe:Property name="KeepConnection">true</fe:Property>
+			<fe:Property designer="true" name="Attachment">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="SimpleMail1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="SimpleMail1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

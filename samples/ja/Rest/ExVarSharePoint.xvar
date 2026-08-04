@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:External name="ExVarSharePoint" xmlns:fe="http://www.infoteria.com/asteria/flowengine">
+	<fe:Description height="17" width="127" x="0" y="0">
+		<fe:Property name="Text">SharePointへの接続情報</fe:Property>
+	</fe:Description>
+	<fe:Variables type="request">
+		<fe:Field id="552e4246-b400-4d24-8be1-fb371ac7fec2" name="path" type="String"/>
+		<fe:Field id="76bb545d-b8ab-4fcc-99c5-f4657f3fec11" name="filepath" type="String"/>
+	</fe:Variables>
+	<fe:Variables type="session">
+		<fe:Field id="aa13e0ba-cd78-47de-b232-d8205121f49b" name="url" type="String"/>
+		<fe:Field id="291d5590-538b-47f7-9e99-a5a1f8ae2569" name="username" type="String"/>
+		<fe:Field id="924666dc-95de-4814-97c4-e837447f976f" name="password" type="String"/>
+	</fe:Variables>
+</fe:External>

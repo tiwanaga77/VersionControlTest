@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Order>
+	<Name>品川太郎</Name>
+	<Address>東京都品川区</Address>
+	<Items>
+		<Item>
+			<Name>マウス</Name>
+			<Type>mouse-a</Type>
+			<Price>1000</Price>
+			<Quantity>2</Quantity>
+		</Item>
+		<Item>
+			<Name>キーボード</Name>
+			<Type>keyboard-b</Type>
+			<Price>8000</Price>
+			<Quantity>1</Quantity>
+		</Item>
+	</Items>
+</Order>

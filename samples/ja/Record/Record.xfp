@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-29T20:02:37.949 JST" fb:idSeq="3" fb:version="1.0" id="5a29cc25-7c44-401d-843c-f3fbf26d14a7" name="Record" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6838</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6838</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="条件に合うレコードを取得する">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="289" x="85" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">RecordFilterを使用して条件に合うレコードを取得します</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="43" visible="true" width="303" x="85" y="120">
+				<fb:Property name="Text">data/従業員名簿.csv ファイルを読み込みます
+CSVファイルには番号、名前、メール、住所、部署番号が保存されています</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/従業員名簿.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="番号" type="Integer"/>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="メール" type="String"/>
+						<fe:Field name="住所" type="String"/>
+						<fe:Field name="部署番号" type="Integer"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="492" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="RecordFilter1" type="RecordFilter">
+			<fb:Description height="95" visible="true" width="553" x="121" y="194">
+				<fb:Property name="Text">住所が "tokyo" のレコードを取得します
+「一致しないレコードも取り出す」が「はい」なので2番目の出力として住所が "tokyo" でないレコードが取り出されます
+条件式には、&amp;&amp; などを使用して取り出す条件を追加できます
+例えば、住所が "tokyo" でメールに "1" を含むレコードを取得するのであれば、
+$record.住所="tokyo" &amp;&amp; $record.メール~="1"
+とします
+※ ~= は文字列を含むという条件です</fb:Property>
+			</fb:Description>
+			<fb:Property name="Icon">recodefilter2.png</fb:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FilterMode">Condition</fe:Property>
+			<fe:Property name="Condition">$record.住所="tokyo"</fe:Property>
+			<fe:Property name="StartRow">1</fe:Property>
+			<fe:Property name="GetCount">0</fe:Property>
+			<fe:Property name="OutputUnmatch">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="220" fb:y="492" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="220" fb:y="390" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="30" visible="true" width="150" x="256" y="390">
+				<fb:Property name="Text">住所がtokyo以外のレコードを
+data/other.csv に保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/other.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="390" name="FilePut2" type="FileSystem(Put)">
+			<fb:Description height="30" visible="true" width="147" x="52" y="390">
+				<fb:Property name="Text">住所がtokyoのレコードを
+data/tokyo.csv に保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/tokyo.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="RecordFilter1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input connector="Unmatch" name="RecordFilter1"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="RecordFilter1"/>
+			<fe:Output name="FilePut2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="FilePut2"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="20件ずつレコードを取得">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="59" width="476" x="84" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">取得したレコードを20件ずつ処理します
+ここでは、１回で処理する単位をページと呼んでいます（WEBなどの一覧画面のページのイメージです）
+フロー変数でページ数を管理しています
+また、RecordFilterコンポーネントで処理するレコードを取り出しています</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="84" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="242" x="88" y="93">
+				<fb:Property name="Text">data/従業員名簿.csv ファイルを読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/従業員名簿.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="番号" type="Integer"/>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="メール" type="String"/>
+						<fe:Field name="住所" type="String"/>
+						<fe:Field name="部署番号" type="Integer"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="231" x="86" y="153">
+				<fb:Property name="Text">取得したレコードの件数から全ページ数を計算しフロー変数にマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="50" fb:y="152" name="Divide1" type="Divide">
+						<fb:Description height="17" visible="true" width="141" x="53" y="193">
+							<fb:Property name="Text">レコード数/1ページの件数</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Divide</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Formula">Input / Data</mp:Property>
+						<mp:Property name="Scale">8</mp:Property>
+						<mp:Input>
+							<mp:Item>Link2</mp:Item>
+							<mp:Item>Link3</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="50" fb:y="288" name="Mod1" type="Mod">
+						<fb:Description height="30" visible="true" width="203" x="50" y="324">
+							<fb:Property name="Text">レコード数/1ページの件数の余りがあれば
+1ページ足します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Mod</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Formula">Input / Data</mp:Property>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link4</mp:Item>
+							<mp:Item>Link5</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="152" fb:y="288" name="If1" type="IF">
+						<mp:Property name="Data">0</mp:Property>
+						<mp:Property name="Compare">=</mp:Property>
+						<mp:Property name="True">0</mp:Property>
+						<mp:Property name="False">1</mp:Property>
+						<mp:Input>
+							<mp:Item>Link6</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="220" fb:y="152" name="Add1" type="Add">
+						<fb:Description height="30" visible="true" width="145" x="220" y="188">
+							<fb:Property name="Text">全ページ数をフロー変数と
+ループする回数にマッピング</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Add</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link7</mp:Item>
+							<mp:Item>Link8</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:COUNT"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/全レコード数"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:COUNT"/>
+						<mp:Output name="Divide1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="FV/１ページの件数"/>
+						<mp:Output name="Divide1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:COUNT"/>
+						<mp:Output name="Mod1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="FV/１ページの件数"/>
+						<mp:Output name="Mod1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input name="Mod1"/>
+						<mp:Output name="If1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input name="Divide1"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input name="If1"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/全ページ数"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:LoopStart1/LoopCount"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="LoopStart1" type="LoopStart">
+			<fb:Description height="30" visible="true" width="186" x="86" y="228">
+				<fb:Property name="Text">ページ数分だけループします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopCount">1</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="RecordFilter1" type="RecordFilter">
+			<fb:Description height="30" visible="true" width="236" x="86" y="360">
+				<fb:Property name="Text">計算した読み込み開始行から1ページの件数分のレコードを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FilterMode">Index</fe:Property>
+			<fe:Property name="Condition"/>
+			<fe:Property name="StartRow">1</fe:Property>
+			<fe:Property name="GetCount">0</fe:Property>
+			<fe:Property name="OutputUnmatch">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="160" x="85" y="296">
+				<fb:Property name="Text">読み込み開始行を計算します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="50" fb:y="50" name="Multiply1" type="Multiply">
+						<fb:Description height="43" visible="true" width="163" x="50" y="86">
+							<fb:Property name="Text">現在のページ×1ページの件数
+</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Multiply</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="220" fb:y="50" name="Add1" type="Add">
+						<fb:Description height="30" visible="true" width="156" x="220" y="86">
+							<fb:Property name="Text">レコードは1行目から開始なので
+1を足しておきます</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Add</mp:Property>
+						<mp:Property name="Data">1</mp:Property>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link3</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="FV/１ページの件数"/>
+						<mp:Output name="Multiply1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/現在のページ"/>
+						<mp:Output name="Multiply1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="FV/１ページの件数"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:RecordFilter1/GetCount"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Multiply1"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:RecordFilter1/StartRow"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="424" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="30" visible="true" width="235" x="154" y="432">
+				<fb:Property name="Text">1ページ分のレコードをCSVファイルに保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath"/>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="Mapper3" type="Mapper2">
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="118" fb:y="84" name="Embed1" type="EMBED">
+						<mp:Property name="Data">data/page-${input1}.csv</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:FilePut1/FilePath"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/現在のページ"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="560" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="492" name="Mapper4" type="Mapper2">
+			<fb:Description height="17" visible="true" width="160" x="155" y="500">
+				<fb:Property name="Text">現在のページを1ページ進めます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="84" fb:y="118" name="Add1" type="Add">
+						<fb:Description height="17" visible="true" width="131" x="84" y="154">
+							<fb:Property name="Text">現在のページに1を足します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Add</mp:Property>
+						<mp:Property name="Data">1</mp:Property>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/現在のページ"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/現在のページ"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="LoopStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="LoopStart1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="RecordFilter1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="RecordFilter1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" default="0" name="全レコード数" type="Integer"/>
+			<fe:Field access="private" default="0" name="全ページ数" type="Integer"/>
+			<fe:Field access="private" default="0" name="現在のページ" type="Integer"/>
+			<fe:Field access="private" default="20" name="１ページの件数" readonly="true" type="Integer"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow3" name="レコードをJoinします">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="33" width="351" x="86" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">従業員名簿.csvには部署番号しか保存されていません
+従業員名簿に部署の情報をマージしてより扱いやすい形式に変換します</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="23" visible="true" width="190" x="55" y="125">
+				<fb:Property name="Text">data/従業員名簿.csv を読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/従業員名簿.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="番号" type="Integer"/>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="メール" type="String"/>
+						<fe:Field name="住所" type="String"/>
+						<fe:Field name="部署番号" type="Integer"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="186" name="FileGet2" type="FileSystem(Get)">
+			<fb:Description height="17" visible="true" width="256" x="155" y="195">
+				<fb:Property name="Text">data/部署情報.csv を読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/部署情報.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="部署番号" type="Integer"/>
+						<fe:Field name="部署名" type="String"/>
+						<fe:Field name="住所" type="String"/>
+						<fe:Field name="電話番号" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="RecordJoin1" type="RecordJoin">
+			<fb:Description height="134" visible="true" width="483" x="86" y="291">
+				<fb:Property name="Text">RecordJoinコンポーネントで2つのレコードをJoinします
+「入力キー」タブで、2つのレコードのどのフィールドとどのフィールドをマッチさせるかを指定します
+また、コンポーネントをダブルクリックすると出力フィールドを選択するためのダイアログが表示されます
+
+ここでは、「入力キー」として、従業員名簿の部署番号と部署情報の部署番号を指定します
+これによって、例えば従業員で部署番号が 1 のレコードに、部署情報の部署番号が 1 のレコード
+の情報がマージされます
+
+「出力フィールド」としては、「部署番号」は必要ないのでそれ以外のすべてのフィールドを指定しています</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:Property name="JoinMode">outer</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:AdditionalProp name="JoinKey">
+				<fe:Row Default="FileGet2.部署番号" Name="FileGet1.部署番号"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="OutputField">
+				<fe:Row Default="in[1].番号" Name="番号"/>
+				<fe:Row Default="in[1].名前" Name="名前"/>
+				<fe:Row Default="in[1].メール" Name="メール"/>
+				<fe:Row Default="in[1].住所" Name="住所"/>
+				<fe:Row Default="in[2].部署名" Name="部署名"/>
+				<fe:Row Default="in[2].住所" Name="住所_2"/>
+				<fe:Row Default="in[2].電話番号" Name="電話番号"/>
+			</fe:AdditionalProp>
+			<fe:Input>
+				<fe:Item>Link3</fe:Item>
+				<fe:Item>Link4</fe:Item>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="番号" type="Integer"/>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="メール" type="String"/>
+						<fe:Field name="住所" type="String"/>
+						<fe:Field name="部署名" type="String"/>
+						<fe:Field name="住所_2" type="String"/>
+						<fe:Field name="電話番号" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="390" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="RecordJoin1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="FileGet2"/>
+			<fe:Output name="RecordJoin1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="RecordJoin1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

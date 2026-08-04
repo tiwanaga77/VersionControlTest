@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-29T15:24:53.273 JST" fb:idSeq="2" fb:version="1.0" id="f75000d1-6afd-49af-8f89-b74671107b2e" name="Exe" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6838</fb:Property>
+	<fb:Property name="UpdateVersion">2312.1699</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="fsctrlの実行（Windows）">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="83" width="688" x="83" y="18">
+			<fb:Property name="Font">MS UI Gothic--14</fb:Property>
+			<fb:Property name="Background">ffccffcc</fb:Property>
+			<fb:Property name="Text">fsctrlコマンドを実行してサービスの状態を取得します
+※fsctrlコマンドの詳細につきましてはヘルプの「運用ガイド」－「起動・停止と管理」－「コマンドライン」を参照してください
+
+service という名称のフロー変数に、状態を取得するサービス名を設定してください
+例）FlowService や FtpService など</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">0</fe:Property>
+				<fe:Property name="RetryInterval">0</fe:Property>
+				<fe:Property name="OtherServerRetry">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Property name="UseHighCapacityStreams">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="EXE1" type="EXE">
+			<fb:Description height="58" visible="true" width="480" x="85" y="220">
+				<fb:Property name="Text">fsctrl.exe status [service]
+というコマンドを実行します
+実行したコマンドの標準出力が出力ストリームとなります
+また、実行したコマンドのリターンコードはコンポーネントの「リターンコード」プロパティに設定されます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property macro="true" name="FilePath">${system.AsteriaDirectory}/bin/fsctrl.exe</fe:Property>
+			<fe:Property name="Argument"/>
+			<fe:Property name="Directory"/>
+			<fe:Property name="STDIN">true</fe:Property>
+			<fe:Property name="OutputEncoding">(Platform)</fe:Property>
+			<fe:Property name="ReturnCode"/>
+			<fe:Property name="Timeout">10</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="StderrCheck">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="403" x="86" y="153">
+				<fb:Property name="Text">EXEコンポーネントの「引数」プロパティへマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Option layer="レイヤー1" name="inputHideFields"/>
+					<mp:Option layer="レイヤー1" name="outputHideFields"/>
+					<mp:Function fb:x="118" fb:y="152" name="Embed2" type="EMBED">
+						<fb:Description height="43" visible="true" width="177" x="118" y="188">
+							<fb:Property name="Text">EXEコンポーネントに渡す引数を
+作成します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">status ${input1}</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link3">
+						<mp:Input name="Embed2"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:EXE1/Argument"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed2"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="458" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="135" x="290" y="458">
+				<fb:Property name="Text">実行中の場合の処理</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="118" fb:y="50" name="Embed1" type="EMBED">
+						<mp:Property name="Data">${input1} は実行中です。</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="526" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="136" x="52" y="458">
+				<fb:Property name="Text">実行中でない場合の処理</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="152" fb:y="84" name="Embed1" type="EMBED">
+						<mp:Property name="Data">${input1} は実行中ではありません。&#xd;
+ステータスは ${input2} です。</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/code"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="526" name="EndResponse2" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="Mapper4" type="Mapper2">
+			<fb:Description height="30" visible="true" width="477" x="84" y="289">
+				<fb:Property name="Text">実行したコマンドのリターンコードを最後のMapperで使用するので、
+codeという名称のフロー変数にマッピングして保存しておきます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="CP/CP:EXE1/ReturnCode"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/code"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="BranchStart1" type="BranchFilterStart">
+			<fb:Description height="31" visible="true" width="409" x="84" y="357">
+				<fb:Property name="Text">リターンコードが 2 の場合は右側に流れて実行中の場合の処理を行います
+リターンコードが 2 でない場合は下側に流れて実行中でない場合の処理を行います
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.code=2</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="EXE1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="EndResponse2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="EXE1"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field default="FtpService" name="service" type="String"/>
+			<fe:Field access="private" name="code" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="fsctrlの実行（Unix）">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="111" width="576" x="85" y="17">
+			<fb:Property name="Font">MS UI Gothic--14</fb:Property>
+			<fb:Property name="Background">ffccffcc</fb:Property>
+			<fb:Property name="Text">fsctrlコマンドを実行してサービスの状態を取得します
+※fsctrlコマンドの詳細につきましてはヘルプの「運用ガイド」－「起動・停止と管理」－「コマンドライン」を参照してください
+
+service という名称のフロー変数に、状態を取得するサービス名を設定してください
+例）FlowService や FtpService など</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">0</fe:Property>
+				<fe:Property name="RetryInterval">0</fe:Property>
+				<fe:Property name="OtherServerRetry">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Property name="UseHighCapacityStreams">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="EXE1" type="EXE">
+			<fb:Description height="58" visible="true" width="480" x="85" y="220">
+				<fb:Property name="Text">fsctrl status [service]
+というコマンドを実行します
+実行したコマンドの標準出力が出力ストリームとなります
+また、実行したコマンドのリターンコードはコンポーネントの「リターンコード」プロパティに設定されます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property macro="true" name="FilePath">${system.AsteriaDirectory}/bin/fsctrl</fe:Property>
+			<fe:Property name="Argument"/>
+			<fe:Property name="Directory"/>
+			<fe:Property name="STDIN">true</fe:Property>
+			<fe:Property name="OutputEncoding">(Platform)</fe:Property>
+			<fe:Property name="ReturnCode"/>
+			<fe:Property name="Timeout">10</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="StderrCheck">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="403" x="86" y="153">
+				<fb:Property name="Text">EXEコンポーネントの「引数」プロパティへマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Option layer="レイヤー1" name="inputHideFields"/>
+					<mp:Option layer="レイヤー1" name="outputHideFields"/>
+					<mp:Function fb:x="118" fb:y="152" name="Embed2" type="EMBED">
+						<fb:Description height="43" visible="true" width="177" x="118" y="188">
+							<fb:Property name="Text">EXEコンポーネントに渡す引数を
+作成します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">status ${input1}</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link3">
+						<mp:Input name="Embed2"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:EXE1/Argument"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed2"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="458" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="135" x="290" y="458">
+				<fb:Property name="Text">実行中の場合の処理</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="118" fb:y="50" name="Embed1" type="EMBED">
+						<mp:Property name="Data">${input1} は実行中です。</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="526" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="136" x="52" y="458">
+				<fb:Property name="Text">実行中でない場合の処理</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="152" fb:y="84" name="Embed1" type="EMBED">
+						<mp:Property name="Data">${input1} は実行中ではありません。&#xd;
+ステータスは ${input2} です。</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="FV/service"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/code"/>
+						<mp:Output name="Embed1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Embed1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/Object"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="526" name="EndResponse2" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="Mapper4" type="Mapper2">
+			<fb:Description height="30" visible="true" width="477" x="84" y="289">
+				<fb:Property name="Text">実行したコマンドのリターンコードを最後のMapperで使用するので、
+codeという名称のフロー変数にマッピングして保存しておきます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="CP/CP:EXE1/ReturnCode"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/code"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="BranchStart1" type="BranchFilterStart">
+			<fb:Description height="31" visible="true" width="409" x="84" y="357">
+				<fb:Property name="Text">リターンコードが 2 の場合は右側に流れて実行中の場合の処理を行います
+リターンコードが 2 でない場合は下側に流れて実行中でない場合の処理を行います
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.code=2</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="EXE1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="EndResponse2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="EXE1"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field default="FtpService" name="service" type="String"/>
+			<fe:Field access="private" name="code" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+</fe:Project>

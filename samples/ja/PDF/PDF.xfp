@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-30T15:25:11.412 JST" fb:idSeq="3" fb:version="1.0" id="7d4457c9-9725-4430-b040-8ccc76a2ec42" name="PDF" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="UpdateVersion">2106.1073</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="マージ">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="201" x="86" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">PDF用のXMLファイルを作成し、１つのPDFにマージします
+</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">0</fe:Property>
+				<fe:Property name="RetryInterval">0</fe:Property>
+				<fe:Property name="OtherServerRetry">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Property name="UseHighCapacityStreams">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="628" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="207" x="89" y="221">
+				<fb:Property name="Text">dataフォルダー下に作成したPDF用のxmlファイルを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/*.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="17" visible="true" width="171" x="86" y="425">
+				<fb:Property name="Text">作成したPDFをファイルに保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/merged.pdf</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="SubFlow1" type="SubFlow2">
+			<fb:Description height="30" visible="true" width="205" x="86" y="120">
+				<fb:Property name="Text">「マージデータ作成」フローを呼び、PDF用のXMLファイルをdataフォルダーに作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">マージデータ作成</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="526" name="DeleteFile1" type="DeleteFile">
+			<fb:Description height="30" visible="true" width="210" x="87" y="525">
+				<fb:Property name="Text">掃除
+PDF用に作成したXMLファイルを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="CannotDeleteException"/>
+			<fe:Property name="From">data/*.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">false</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="322" name="PDFMerge21" type="PDFMerge2">
+			<fb:Description height="30" visible="true" width="202" x="93" y="322">
+				<fb:Property name="Text">入力ストリーム順にマージしたPDFを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="OutputType">PDF</fe:Property>
+			<fe:Property name="PageRenumber">false</fe:Property>
+			<fe:Property name="TimeReset">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link3">
+			<fe:Input name="SubFlow1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="DeleteFile1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="SubFlow1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="DeleteFile1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="PDFMerge21"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="PDFMerge21"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="マージデータ作成">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">0</fe:Property>
+				<fe:Property name="RetryInterval">0</fe:Property>
+				<fe:Property name="OtherServerRetry">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Property name="UseHighCapacityStreams">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="201" x="87" y="222">
+				<fb:Property name="Text">PDFの表紙用にデータをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Option layer="レイヤー1" name="inputHideFields"/>
+					<mp:Option layer="レイヤー1" name="outputHideFields"/>
+					<mp:Function fb:x="50" fb:y="118" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="58" x="50" y="154">
+							<fb:Property name="Text">2021年6月</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">2021年6月</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="50" fb:y="50" name="Const2" type="CONST">
+						<fb:Description height="17" visible="true" width="64" x="50" y="86">
+							<fb:Property name="Text">部内報告書</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">部内報告書</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="50" fb:y="186" name="Const3" type="CONST">
+						<fb:Description height="17" visible="true" width="68" x="50" y="222">
+							<fb:Property name="Text">日本　太郎</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">日本　太郎</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Const2"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF21/Cell/title"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="Const1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF21/Cell/date"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Const3"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF21/Cell/name"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:SyncDef component="PDF21"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="220" name="Mapper5" type="Mapper2">
+			<fb:Description height="30" visible="true" width="203" x="395" y="222">
+				<fb:Property name="Text">CSVの各レコードからPDFのページ用データをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Option layer="レイヤー1" name="inputHideFields"/>
+					<mp:Option layer="レイヤー1" name="outputHideFields"/>
+					<mp:Function fb:x="186" fb:y="220" name="Add1" type="Add">
+						<mp:Property name="Calculation">Add</mp:Property>
+						<mp:Property name="Data">1</mp:Property>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link5</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="FV/count"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/count"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/川柳"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF24/Cell/川柳"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/説明"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF24/Cell/説明"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/部署"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF24/Cell/部署"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/氏名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF24/Cell/氏名"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:SyncDef component="PDF24"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="526" name="FilePut5" type="FileSystem(Put)">
+			<fb:Description height="17" visible="true" width="171" x="398" y="529">
+				<fb:Property name="Text">作成したXMLをファイルに保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/page3.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="424" name="Mapper6" type="Mapper2">
+			<fb:Description height="30" visible="true" width="208" x="395" y="428">
+				<fb:Property name="Text">CSVの各レコードごとにファイル名を変えるようにマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="118" fb:y="50" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="82" x="118" y="86">
+							<fb:Property name="Text">data/page</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">data/page</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="254" fb:y="118" name="Concatenate1" type="CONCATENATE">
+						<mp:Property name="Separator"/>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Property name="NoSeparatorWhenEmpty">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+							<mp:Item>Link3</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="118" fb:y="220" name="Const2" type="CONST">
+						<fb:Description height="17" visible="true" width="24" x="118" y="256">
+							<fb:Property name="Text">.xml</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">.xml</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Const1"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/count"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Const2"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="Concatenate1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:FilePut5/FilePath"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="628" name="End5" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="118" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="193" x="396" y="120">
+				<fb:Property name="Text">CSVからデータを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/data.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Property name="SkipEmptyLine">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="氏名" type="String"/>
+						<fe:Field name="川柳" type="String"/>
+						<fe:Field name="説明" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="560" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="FilePut2" type="FileSystem(Put)">
+			<fb:Description height="17" visible="true" width="171" x="82" y="461">
+				<fb:Property name="Text">作成したXMLをファイルに保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/page0.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="322" name="PDF21" type="PDF2">
+			<fb:Description height="43" visible="true" width="203" x="83" y="320">
+				<fb:Property name="Text">マージするための合成用XMLを作成します 起動したExcelでdata/テンプレート.xlsxを開きます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="OutputType">XML</fe:Property>
+			<fe:Property name="PCF">
+				<viewtemplate confdir="C:/Users/asteria/AppData/Roaming/Asteria/ASTERIA Warp Flow Designer/2106/conf" filename="\asteriahome5\home\guest\samples\ja\PDF\data\template.xlsx">
+					<component area="Sheet1!B3:F25" fmargin="21.6" font="Calibri" fontsize="22.7" hcenter="false" hmargin="21.6" layout="vertical" leftspace="50.4" name="Sheet1" rightspace="50.4" size="xlPaperA4" underspace="54" upperspace="54" vcenter="false" xscale="494.5" yscale="733.9" zoomToFit="true">
+						<images>
+							<image file="warning.png" height="100.1" name=" 0Picture 2" path="C:/asteriahome5/home/guest/samples/ja/PDF/data/warning.png" width="100.1" x="197.8" y="493.2">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</image>
+						</images>
+						<records/>
+						<body>
+							<line pensize="xlMedium" xend="494.5" xstart="0" yend="0" ystart="0"/>
+							<line pensize="xlMedium" xend="494.5" xstart="0" yend="702.2" ystart="702.2"/>
+							<line pensize="xlMedium" xend="0" xstart="0" yend="702.2" ystart="0"/>
+							<line pensize="xlMedium" xend="494.5" xstart="494.5" yend="702.2" ystart="0"/>
+							<text font="ＭＳ ゴシック" height="48.2" position="center" size="41.2" width="98.9" x="197.8" y="148.3"/>
+							<text font="ＭＳ ゴシック" height="29.7" position="center" width="98.9" x="197.8" y="374.6"/>
+							<text font="ＭＳ ゴシック" height="29.7" position="center" width="98.9" x="197.8" y="404.2"/>
+							<text font="ＭＳ ゴシック" height="29.7" position="center" valign="center" width="98.9" x="197.8" y="611.9"><bold>true</bold>社外秘</text>
+						</body>
+						<header>
+							<text area="D8:D8" font="ＭＳ ゴシック" height="48.2" name="title" position="center" size="41.2" width="98.9" x="197.8" y="148.3"/>
+							<text area="D15:D15" font="ＭＳ ゴシック" height="29.7" name="date" position="center" width="98.9" x="197.8" y="374.6"/>
+							<text area="D16:D16" font="ＭＳ ゴシック" height="29.7" name="name" position="center" width="98.9" x="197.8" y="404.2"/>
+						</header>
+						<information/>
+					</component>
+					<pdfsetting>
+						<security accessibility="true" annotations="false" assemble="false" contents="false" copy="true" fillinform="false" print="true" printquality="true" strength="2"/>
+					</pdfsetting>
+				</viewtemplate>
+			</fe:Property>
+			<fe:Property name="SecurityLevel">2</fe:Property>
+			<fe:Property name="Security" unfold="true">
+				<fe:Property name="UserPassword"/>
+				<fe:Property name="OwnerPassword"/>
+				<fe:Property name="AllowPrint">true</fe:Property>
+				<fe:Property name="AllowCopy">true</fe:Property>
+				<fe:Property name="AllowEdit">false</fe:Property>
+				<fe:Property name="AllowAnnotate">false</fe:Property>
+				<fe:Property name="AllowFillInForm">false</fe:Property>
+				<fe:Property name="AllowExtractForAccessibility">true</fe:Property>
+				<fe:Property name="AllowAssemble">false</fe:Property>
+				<fe:Property name="AllowHighQualityPrinting">true</fe:Property>
+			</fe:Property>
+			<fe:AdditionalProp name="Cell">
+				<fe:Row Name="title" Type="String"/>
+				<fe:Row Name="date" Type="String"/>
+				<fe:Row Name="name" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Image">
+				<fe:Row Name=" 0Picture 2" Type="Binary"/>
+			</fe:AdditionalProp>
+			<fe:Input>
+				<fe:Stream format="Record">
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="322" name="PDF24" type="PDF2">
+			<fb:Description height="56" visible="true" width="295" x="390" y="319">
+				<fb:Property name="Text">データページ用にマージするための合成用XMLを作成します
+起動したExcelでdata/データテンプレート.xlsxを開きます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="OutputType">XML</fe:Property>
+			<fe:Property name="PCF">
+				<viewtemplate confdir="C:/Users/asteria/AppData/Roaming/Asteria/ASTERIA Warp Flow Designer/2106/conf" filename="\asteriahome5\home\guest\samples\ja\PDF\data\template.xlsx">
+					<component area="Sheet2!B3:F25" fmargin="21.6" font="Calibri" fontsize="22.7" hcenter="false" hmargin="21.6" layout="vertical" leftspace="50.4" name="Sheet2" rightspace="50.4" size="xlPaperA4" underspace="54" upperspace="54" vcenter="false" xscale="494.5" yscale="733.9" zoomToFit="true">
+						<images/>
+						<records/>
+						<body>
+							<line pensize="xlMedium" xend="494.5" xstart="0" yend="0" ystart="0"/>
+							<line pensize="xlThin" xend="395.6" xstart="98.9" yend="379.5" ystart="379.5"/>
+							<line pensize="xlThin" xend="395.6" xstart="98.9" yend="379.5" ystart="379.5"/>
+							<line pensize="xlThin" xend="395.6" xstart="98.9" yend="409.2" ystart="409.2"/>
+							<line pensize="xlThin" xend="395.6" xstart="98.9" yend="409.2" ystart="409.2"/>
+							<line pensize="xlMedium" xend="494.5" xstart="0" yend="707.1" ystart="707.1"/>
+							<line pensize="xlMedium" xend="0" xstart="0" yend="707.1" ystart="0"/>
+							<line pensize="xlMedium" xend="494.5" xstart="494.5" yend="707.1" ystart="0"/>
+							<text font="ＭＳ Ｐゴシック" height="28.9" valign="top" width="98.9" x="98.9" y="349.8">部署</text>
+							<text font="ＭＳ Ｐゴシック" height="28.1" valign="top" width="98.9" x="98.9" y="380.3">氏名</text>
+							<text font="ＭＳ Ｐゴシック" height="28.9" valign="top" width="98.9" x="98.9" y="410">説明</text>
+						</body>
+						<header>
+							<text area="C8:C8" font="ＭＳ Ｐゴシック" height="112.5" name="川柳" position="center" valign="top" width="296.7" x="98.9" y="148.3">
+								<wrap>true</wrap>
+							</text>
+							<text area="D14:D14" font="ＭＳ Ｐゴシック" height="28.9" name="部署" valign="top" width="197.8" x="197.8" y="349.8"/>
+							<text area="D15:D15" font="ＭＳ Ｐゴシック" height="28.1" name="氏名" valign="top" width="197.8" x="197.8" y="380.3"/>
+							<text area="D16:D16" font="ＭＳ Ｐゴシック" height="58.6" name="説明" valign="top" width="197.8" x="197.8" y="410">
+								<wrap>true</wrap>
+							</text>
+						</header>
+						<information/>
+					</component>
+					<pdfsetting>
+						<security accessibility="true" annotations="false" assemble="false" contents="false" copy="true" fillinform="false" print="true" printquality="true" strength="2"/>
+					</pdfsetting>
+				</viewtemplate>
+			</fe:Property>
+			<fe:Property name="SecurityLevel">2</fe:Property>
+			<fe:Property name="Security" unfold="true">
+				<fe:Property name="UserPassword"/>
+				<fe:Property name="OwnerPassword"/>
+				<fe:Property name="AllowPrint">true</fe:Property>
+				<fe:Property name="AllowCopy">true</fe:Property>
+				<fe:Property name="AllowEdit">false</fe:Property>
+				<fe:Property name="AllowAnnotate">false</fe:Property>
+				<fe:Property name="AllowFillInForm">false</fe:Property>
+				<fe:Property name="AllowExtractForAccessibility">true</fe:Property>
+				<fe:Property name="AllowAssemble">false</fe:Property>
+				<fe:Property name="AllowHighQualityPrinting">true</fe:Property>
+			</fe:Property>
+			<fe:AdditionalProp name="Cell">
+				<fe:Row Name="川柳" Type="String"/>
+				<fe:Row Name="部署" Type="String"/>
+				<fe:Row Name="氏名" Type="String"/>
+				<fe:Row Name="説明" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:Input>
+				<fe:Stream format="Record">
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link12">
+			<fe:Input name="Mapper6"/>
+			<fe:Output name="FilePut5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FilePut5"/>
+			<fe:Output name="End5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="FilePut2"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="PDF21"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="PDF21"/>
+			<fe:Output name="FilePut2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link11">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Mapper5"/>
+			<fe:Output name="PDF24"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="PDF24"/>
+			<fe:Output name="Mapper6"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Start1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" default="0" name="count" type="Integer"/>
+		</fe:Variables>
+	</fe:Flow>
+</fe:Project>

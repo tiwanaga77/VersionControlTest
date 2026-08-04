@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-30T21:18:57.787 JST" fb:idSeq="6" fb:version="1.0" id="49991110-587f-4e5f-abc3-b9589218445f" name="Rest" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:External filepath="ExVarSharePoint.xvar" name="ExVarSharePoint">
+		<fe:Variables type="request">
+			<fe:Field id="552e4246-b400-4d24-8be1-fb371ac7fec2" name="path" type="String"/>
+			<fe:Field id="76bb545d-b8ab-4fcc-99c5-f4657f3fec11" name="filepath" type="String"/>
+		</fe:Variables>
+		<fe:Variables type="session">
+			<fe:Field id="aa13e0ba-cd78-47de-b232-d8205121f49b" name="url" type="String"/>
+			<fe:Field id="291d5590-538b-47f7-9e99-a5a1f8ae2569" name="username" type="String"/>
+			<fe:Field id="924666dc-95de-4814-97c4-e837447f976f" name="password" type="String"/>
+		</fe:Variables>
+	</fe:External>
+	<fe:Flow id="Flow1" name="ファイルのアップロード">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">false</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="69" width="409" x="84" y="58">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーへの接続用コネクションを作成して設定するか、URL、ユーザー名、パスワードなどの接続情報を設定してください
+このフローでは、外部変数として、url、username、password、path、filepathを設定し、各外部変数を接続情報や「パス」プロパティに設定していますので、各外部変数に値を設定してからフローを実行してください</fb:Property>
+		</fb:Description>
+		<fb:Description height="30" width="242" x="88" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーへファイルをアップロードします</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="REST" type="REST">
+			<fb:Description height="43" visible="true" width="348" x="85" y="459">
+				<fb:Property name="Text">PUTメソッドにより、入力ストリームのファイルデータをSharePointサーバーへアップロードします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="HTTPException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection">SharePoint2007</fe:Property>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property macro="true" name="URL">${exvar.ExVarSharePoint.url}</fe:Property>
+				<fe:Property name="URLEncoding">utf-8</fe:Property>
+				<fe:Property name="Timeout">60</fe:Property>
+				<fe:Property name="BasicAuth" unfold="true">
+					<fe:Property macro="true" name="Username">${exvar.ExVarSharePoint.username}</fe:Property>
+					<fe:Property macro="true" name="Password">${exvar.ExVarSharePoint.password}</fe:Property>
+				</fe:Property>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property macro="true" name="Path">${flow.DIR}</fe:Property>
+			<fe:Property name="HTTPMethod">PUT</fe:Property>
+			<fe:Property name="AdditionalAhead">Stream</fe:Property>
+			<fe:Property name="HTTPVersion">HTTP/1.1</fe:Property>
+			<fe:Property name="RetryCount">3</fe:Property>
+			<fe:Property name="RetryInterval">1</fe:Property>
+			<fe:Property name="FollowRedirects">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper3" type="Mapper2">
+			<fb:Description height="30" visible="true" width="195" x="85" y="155">
+				<fb:Property name="Text">アップロード先フォルダのパスをフロー変数「DIR」に設定します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="152" fb:y="152" name="NullCheck1" type="NullCheck">
+						<mp:Property name="AllowEmptyString">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="50" fb:y="254" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="99" x="50" y="290">
+							<fb:Property name="Text">Docs/Documents/</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">Docs/Documents/</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ExVarSharePoint/path"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="Const1"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="NullCheck1"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/DIR"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="254" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="293" x="85" y="254">
+				<fb:Property name="Text">SharePointサーバーへアップロードするファイルを指定します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/uploadfile.txt</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="30" visible="true" width="127" x="494" y="16">
+				<fb:Property name="Text">ExVarSharePoint
+SharePointへの接続情報</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ExVarSharePoint.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="560" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="Mapper1" type="Mapper2">
+			<fb:Description height="43" visible="true" width="348" x="83" y="356">
+				<fb:Property name="Text">アップロードするファイルパスからファイル名を取得し、フロー変数「DIR」より合成したパスを「パス」プロパティにマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="84" fb:y="84" name="Filename1" type="FILENAME">
+						<mp:Property name="Get">Name</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="152" fb:y="152" name="Concatenate1" type="CONCATENATE">
+						<mp:Property name="Separator"/>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Property name="NoSeparatorWhenEmpty">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link2</mp:Item>
+							<mp:Item>Link5</mp:Item>
+							<mp:Item>Link3</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="50" fb:y="322" name="Now1" type="NOW">
+						<fb:Description height="30" visible="true" width="209" x="50" y="358">
+							<fb:Property name="Text">ファイル名に数値を付けて、複数回ファイルアップロードのテストが行えるようにしています</fb:Property>
+						</fb:Description>
+						<mp:Property name="Format">SSS</mp:Property>
+						<mp:Property name="TruncateTime">false</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:V/FilePath"/>
+						<mp:Output name="Filename1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/DIR"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Filename1"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="Concatenate1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:REST/Path"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="Now1"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="REST"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="REST"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" default="Docs/Documents/" name="DIR" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="ファイルのダウンロード">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">false</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="29" width="269" x="87" y="20">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーよりファイルをダウンロードします
+</fb:Property>
+		</fb:Description>
+		<fb:Description height="69" width="409" x="86" y="60">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーへの接続用コネクションを作成して設定するか、URL、ユーザー名、パスワードなどの接続情報を設定してください
+このフローでは、外部変数として、url、username、password、path、filepathを設定し、各外部変数を接続情報や「パス」プロパティに設定していますので、各外部変数に値を設定してからフローを実行してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="17" visible="true" width="139" x="86" y="357">
+				<fb:Property name="Text">取得したファイルを保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath"/>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="254" name="Mapper2" type="Mapper2">
+			<fb:Description height="43" visible="true" width="300" x="86" y="253">
+				<fb:Property name="Text">フロー変数FILEPATHより、ファイル名を取得しdataフォルダ下のファイルとしてマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="152" fb:y="152" name="Filename1" type="FILENAME">
+						<mp:Property name="Get">Name</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="152" fb:y="50" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="32" x="152" y="86">
+							<fb:Property name="Text">data/</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">data/</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="254" fb:y="50" name="Concatenate1" type="CONCATENATE">
+						<mp:Property name="Separator"/>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+						<mp:Property name="NoSeparatorWhenEmpty">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link3</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="CP/CP:REST/Path"/>
+						<mp:Output name="Filename1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Const1"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="Filename1"/>
+						<mp:Output name="Concatenate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="Concatenate1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:FilePut1/FilePath"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:AdditionalProp name="Variables">
+				<fe:Row Name="FileName" Type="String" streamVariables="false"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="REST" type="REST">
+			<fb:Description height="17" visible="true" width="178" x="86" y="155">
+				<fb:Property name="Text">GETメソッドによりファイルを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="HTTPException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection">SharePoint2007</fe:Property>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property macro="true" name="URL">${exvar.ExVarSharePoint.url}</fe:Property>
+				<fe:Property name="URLEncoding">utf-8</fe:Property>
+				<fe:Property name="Timeout">60</fe:Property>
+				<fe:Property name="BasicAuth" unfold="true">
+					<fe:Property macro="true" name="Username">${exvar.ExVarSharePoint.username}</fe:Property>
+					<fe:Property macro="true" name="Password">${exvar.ExVarSharePoint.password}</fe:Property>
+				</fe:Property>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property macro="true" name="Path">${exvar.ExVarSharePoint.filepath}</fe:Property>
+			<fe:Property name="HTTPMethod">GET</fe:Property>
+			<fe:Property name="AdditionalAhead">Stream</fe:Property>
+			<fe:Property name="HTTPVersion">HTTP/1.1</fe:Property>
+			<fe:Property name="RetryCount">3</fe:Property>
+			<fe:Property name="RetryInterval">1</fe:Property>
+			<fe:Property name="FollowRedirects">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="30" visible="true" width="127" x="494" y="16">
+				<fb:Property name="Text">ExVarSharePoint
+SharePointへの接続情報</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ExVarSharePoint.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="REST"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="REST"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow5" name="ファイルリストの取得">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">false</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="35" width="215" x="86" y="21">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーよりファイルリストを取得しレコードストリームを作成します</fb:Property>
+		</fb:Description>
+		<fb:Description height="69" width="409" x="87" y="68">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">SharePointサーバーへの接続用コネクションを作成して設定するか、URL、ユーザー名、パスワードなどの接続情報を設定してください
+このフローでは、外部変数として、url、username、password、path、filepathを設定し、各外部変数を接続情報や「パス」プロパティに設定していますので、各外部変数に値を設定してからフローを実行してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="REST1" type="REST">
+			<fb:Description height="43" visible="true" width="387" x="87" y="218">
+				<fb:Property name="Text">PROPFINDメソッドを実行し、SharePointサーバーからファイルリストを取得します
+検索パスはフロー変数の初期値に「/Docs/Documents/」が指定されています</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="HTTPException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection">SharePoint2007</fe:Property>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property macro="true" name="URL">${exvar.ExVarSharePoint.url}</fe:Property>
+				<fe:Property name="URLEncoding">utf-8</fe:Property>
+				<fe:Property name="Timeout">60</fe:Property>
+				<fe:Property name="BasicAuth" unfold="true">
+					<fe:Property macro="true" name="Username">${exvar.ExVarSharePoint.username}</fe:Property>
+					<fe:Property macro="true" name="Password">${exvar.ExVarSharePoint.password}</fe:Property>
+				</fe:Property>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property macro="true" name="Path">${exvar.ExVarSharePoint.path}</fe:Property>
+			<fe:Property name="HTTPMethod">PROPFIND</fe:Property>
+			<fe:Property name="AdditionalAhead">Stream</fe:Property>
+			<fe:Property name="HTTPVersion">HTTP/1.1</fe:Property>
+			<fe:Property name="RetryCount">3</fe:Property>
+			<fe:Property name="RetryInterval">1</fe:Property>
+			<fe:Property name="FollowRedirects">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef>
+						<fe:Namespace prefix="D" uri="DAV:"/>
+						<fe:Namespace prefix="Z" uri="urn:schemas-microsoft-com:"/>
+						<fe:Namespace prefix="Office" uri="urn:schemas-microsoft-com:office:office"/>
+						<fe:Namespace prefix="Repl" uri="http://schemas.microsoft.com/repl/"/>
+						<fe:Field expanded="true" name="D:multistatus" nodeType="Element" repeat="false" type="String">
+							<fe:Field expanded="true" name="D:response" nodeType="Element" repeat="true" type="String">
+								<fe:Field name="D:href" nodeType="Element" repeat="false" type="String"/>
+								<fe:Field expanded="true" name="D:propstat" nodeType="Element" repeat="false" type="String">
+									<fe:Field expanded="true" name="D:prop" nodeType="Element" repeat="false" type="String">
+										<fe:Field name="D:displayname" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:lockdiscovery" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:supportedlock" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:isFolder" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:iscollection" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:ishidden" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:getcontenttype" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:getcontentlength" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field expanded="true" name="D:resourcetype" nodeType="Element" repeat="false" type="String">
+											<fe:Field name="D:collection" nodeType="Element" repeat="false" type="String"/>
+										</fe:Field>
+										<fe:Field name="Repl:authoritative-directory" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:getlastmodified" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:creationdate" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="Repl:repl-uid" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="Repl:resourcetag" nodeType="Element" repeat="false" type="String"/>
+										<fe:Field name="D:getetag" nodeType="Element" repeat="false" type="String"/>
+									</fe:Field>
+									<fe:Field name="D:status" nodeType="Element" repeat="false" type="String"/>
+								</fe:Field>
+							</fe:Field>
+						</fe:Field>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="Mapper1" type="Mapper2">
+			<fb:Description height="43" visible="true" width="287" x="81" y="354">
+				<fb:Property name="Text">取得したレスポンスXMLよりデータを取得し、表示名、URL、フォルダかどうかの、3フィールドを持つレコードストリームを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="186" fb:y="118" name="Equal1" type="Equal">
+						<mp:Property name="Operator">==</mp:Property>
+						<mp:Property name="Data">t</mp:Property>
+						<mp:Property name="CompareType">String</mp:Property>
+						<mp:Input>
+							<mp:Item>Link4</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/D:multistatus/D:response/D:href"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/URL"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/D:multistatus/D:response/D:propstat/D:prop/D:displayname"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/表示名"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:REST1/SD:F/D:multistatus/D:response/D:propstat/D:prop/D:isFolder"/>
+						<mp:Output name="Equal1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Equal1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/フォルダ"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="表示名" type="String"/>
+						<fe:Field name="URL" type="String"/>
+						<fe:Field name="フォルダ" type="Boolean"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="EndResponse1" type="EndResponse">
+			<fb:Description height="17" visible="true" width="180" x="86" y="459">
+				<fb:Property name="Text">作成したレコードストリームを返します</fb:Property>
+			</fb:Description>
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="356" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="30" visible="true" width="305" x="491" y="359">
+				<fb:Property name="Text">取得したレスポンスXMLを検証用にファイルに保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/SharePointResponseSample.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="458" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="30" visible="true" width="127" x="494" y="16">
+				<fb:Property name="Text">ExVarSharePoint
+SharePointへの接続情報</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ExVarSharePoint.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper2" type="Mapper2">
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="220" fb:y="254" name="NullCheck1" type="NullCheck">
+						<mp:Property name="AllowEmptyString">false</mp:Property>
+						<mp:Input>
+							<mp:Item>Link2</mp:Item>
+							<mp:Item>Link3</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="118" fb:y="186" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="99" x="118" y="222">
+							<fb:Property name="Text">Docs/Documents/</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">Docs/Documents/</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ExVarSharePoint/path"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Const1"/>
+						<mp:Output name="NullCheck1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input name="NullCheck1"/>
+						<mp:Output fb:x="0" fb:y="0" table="EV/ExVarSharePoint/path"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link3">
+			<fe:Input name="REST1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="REST1"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Hooked">
+				<fb:Shapes>
+					<fb:Shape ex="0.0" ey="30.0" sx="0.0" sy="0.0"/>
+					<fb:Shape ex="408.0" ey="30.0" sx="0.0" sy="30.0"/>
+					<fb:Shape ex="408.0" ey="94.0" sx="408.0" sy="30.0"/>
+				</fb:Shapes>
+			</fb:Line>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="REST1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow6" name="WebPage">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">false</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="56" width="335" x="86" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">「ファイルリストの取得」フロー、「ファイルのダウンロード」フローを実行するフローです
+実行設定を行いブラウザから実行してください
+プロトコル例「http://localhost:21380/guest/Rest/WebPage」</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="HttpStart1" type="HttpStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="QueryEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="ParameterList">
+					<fe:FieldDef>
+						<fe:Field name="path" type="String"/>
+						<fe:Field name="filepath" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="254" name="SubFlow1" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="94" x="52" y="254">
+				<fb:Property name="Text">ファイルリストの取得</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">ファイルリストの取得</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="表示名" type="String"/>
+						<fe:Field name="URL" type="String"/>
+						<fe:Field name="フォルダ" type="Boolean"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="237" x="85" y="118">
+				<fb:Property name="Text">path、filepath、２つのパラメーターを受け取ります</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:HttpStart1/SD:F/path"/>
+						<mp:Output fb:x="0" fb:y="0" table="EV/ExVarSharePoint/path"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:HttpStart1/SD:F/filepath"/>
+						<mp:Output fb:x="0" fb:y="0" table="EV/ExVarSharePoint/filepath"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="30" visible="true" width="127" x="494" y="16">
+				<fb:Property name="Text">ExVarSharePoint
+SharePointへの接続情報</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ExVarSharePoint.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="Velocity1" type="HTML (Output)">
+			<fb:Description height="48" visible="true" width="149" x="59" y="355">
+				<fb:Property name="Text">Webページ用のHTMLを作成し返します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Mode">Inline</fe:Property>
+			<fe:Property name="Template">&lt;html&gt;&#xd;
+&lt;head&gt;&#xd;
+&lt;style type="text/css"&gt;&#xd;
+&lt;!--&#xd;
+.path{&#xd;
+width:600px;&#xd;
+}&#xd;
+.files{&#xd;
+border-collapse: collapse;&#xd;
+}&#xd;
+table, td, th{&#xd;
+border:1px solid #000000;&#xd;
+}&#xd;
+--&gt;&#xd;
+&lt;/style&gt;&#xd;
+&lt;script&gt;&#xd;
+&lt;!--&#xd;
+function changePath(path) {&#xd;
+	document.search.filepath.value = "";&#xd;
+	document.search.path.value = path.substr("$!{exvar.ExVarSharePoint.url}".length);&#xd;
+	document.search.submit();&#xd;
+}&#xd;
+function download(path) {&#xd;
+	document.search.filepath.value = path.substr("$!{exvar.ExVarSharePoint.url}".length);&#xd;
+	document.search.submit();&#xd;
+}&#xd;
+--&gt;&#xd;
+&lt;/script&gt;&#xd;
+&lt;/head&gt;&#xd;
+&lt;body&gt;&#xd;
+&lt;h2&gt;SharePointサンプル&lt;h2&gt;&#xd;
+&lt;form name="search" method="post" action="WebPage" onsubmit="document.search.filepath.value='';"&gt;&#xd;
+検索パス&lt;input class="path" type="text" name="path" value="$!{exvar.ExVarSharePoint.path}"/&gt;&#xd;
+&lt;input type="hidden" name="filepath" value=""/&gt;&#xd;
+&lt;/form&gt;&#xd;
+##レコードinの表示&#xd;
+&lt;table class="files"&gt;&#xd;
+&lt;tr&gt;&#xd;
+&lt;th&gt;ファイル名&lt;/th&gt;&#xd;
+&lt;th&gt;パス&lt;/th&gt;&#xd;
+&lt;/tr&gt;&#xd;
+#foreach ($r in $in.records)&#xd;
+&lt;tr&gt;&#xd;
+&lt;td&gt;#if ($r.field("フォルダ") == "true")/#end$r.field("表示名")&lt;/td&gt;&#xd;
+&lt;td&gt;&#xd;
+#if ($r.field("フォルダ") == "true")&#xd;
+&lt;a href="javascript:changePath('$r.field("URL")')"&gt;$r.field("URL")&lt;/a&gt;&#xd;
+#else&#xd;
+&lt;a href="javascript:download('$r.field("URL")')"&gt;$r.field("URL")&lt;/a&gt;&#xd;
+#end&#xd;
+&lt;/td&gt;&#xd;
+&lt;/tr&gt;&#xd;
+#end&#xd;
+&lt;/table&gt;&#xd;
+&lt;/div&gt;&#xd;
+&lt;/body&gt;&#xd;
+&lt;/html&gt;</fe:Property>
+			<fe:Property name="TemplateFilename"/>
+			<fe:Property name="TemplateHome">Relative</fe:Property>
+			<fe:Property name="TemplateEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="XPathVariablePrefix">fv</fe:Property>
+			<fe:Output>
+				<fe:Stream format="HTML">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="458" name="HttpEnd1" type="HttpEnd">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="ContentType">(AutoDetect)</fe:Property>
+			<fe:Property name="Location"/>
+			<fe:Property name="Download" unfold="true">
+				<fe:Property name="FileName"/>
+			</fe:Property>
+			<fe:Property name="JSONPCallback"/>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="186" name="BranchStart1" type="BranchFilterStart">
+			<fb:Description height="56" visible="true" width="331" x="295" y="169">
+				<fb:Property name="Text">filepathパラメーターが設定されているときは「ファイルのダウンロード」フローを実行し、設定されていないときは「ファイルリストの取得」フローを実行するように処理を分岐します
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$exvar.ExVarSharePoint.filepath!=""</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="254" name="SubFlow2" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="101" x="290" y="254">
+				<fb:Property name="Text">ファイルのダウンロード</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">ファイルのダウンロード</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="458" name="HttpEnd2" type="HttpEnd">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="ContentType">(AutoDetect)</fe:Property>
+			<fe:Property name="Location"/>
+			<fe:Property name="Download" unfold="true">
+				<fe:Property name="FileName"/>
+			</fe:Property>
+			<fe:Property name="JSONPCallback"/>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="356" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="200" x="290" y="356">
+				<fb:Property name="Text">ダウンロードしたファイル名をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="118" fb:y="152" name="Filename1" type="FILENAME">
+						<mp:Property name="Get">Name</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ExVarSharePoint/filepath"/>
+						<mp:Output name="Filename1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="Filename1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:HttpEnd2/FileName"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="HttpStart1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="SubFlow1"/>
+			<fe:Output name="Velocity1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Velocity1"/>
+			<fe:Output name="HttpEnd1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="SubFlow1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="SubFlow2"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="SubFlow2"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="HttpEnd2"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

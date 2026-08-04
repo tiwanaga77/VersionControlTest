@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-30T16:03:19.916 JST" fb:idSeq="2" fb:version="1.0" id="d4a61369-b7d0-4bce-831f-87653f1a03b0" name="Xml" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6839</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6839</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="XMLUpdate">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="253" width="420" x="358" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">注文情報を表すXMLを読み込み合計金額を計算し、
+計算した合計金額をXMLに差し込みます
+
+XMLファイルの形式は次のようになっています
+
+&lt;Order&gt;
+    &lt;Name/&gt;
+    &lt;Address/&gt;
+    &lt;Items&gt;
+        &lt;Item&gt;
+            &lt;Name/&gt;
+            &lt;Type/&gt;
+            &lt;Price/&gt;
+            &lt;Quantity/&gt;
+        &lt;/Item&gt;
+    &lt;/Items&gt;
+&lt;/Order&gt;
+
+計算した合計金額を Order 要素の子要素の最後に Amount 要素として差し込みます</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="84" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="209" x="86" y="87">
+				<fb:Property name="Text">注文情報が格納されているXMLファイルを読み込みます
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/order.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef>
+						<fe:Field expanded="true" name="Order" nodeType="Element" repeat="false" type="String">
+							<fe:Field name="Name" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field name="Address" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field expanded="true" name="Items" nodeType="Element" repeat="false" type="String">
+								<fe:Field expanded="true" name="Item" nodeType="Element" repeat="true" type="String">
+									<fe:Field name="Name" nodeType="Element" repeat="false" type="String"/>
+									<fe:Field name="Type" nodeType="Element" repeat="false" type="String"/>
+									<fe:Field name="Price" nodeType="Element" repeat="false" type="Integer"/>
+									<fe:Field name="Quantity" nodeType="Element" repeat="false" type="Integer"/>
+								</fe:Field>
+							</fe:Field>
+						</fe:Field>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="166" x="87" y="154">
+				<fb:Property name="Text">合計金額を計算し
+マッパー変数 total に格納します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="50" fb:y="152" name="Multiply1" type="Multiply">
+						<fb:Description height="30" visible="true" width="202" x="50" y="188">
+							<fb:Property name="Text">価格と個数から1つの注文の
+小計を計算します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Multiply</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link1</mp:Item>
+							<mp:Item>Link2</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Function fb:x="254" fb:y="152" name="Add1" type="Add">
+						<fb:Description height="30" visible="true" width="213" x="254" y="188">
+							<fb:Property name="Text">合計を保存するマッパー変数に
+小計を足します</fb:Property>
+						</fb:Description>
+						<mp:Property name="Calculation">Add</mp:Property>
+						<mp:Property name="Data"/>
+						<mp:Property name="Scale"/>
+						<mp:Input>
+							<mp:Item>Link3</mp:Item>
+							<mp:Item>Link4</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/Order/Items/Item/Price"/>
+						<mp:Output name="Multiply1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/Order/Items/Item/Quantity"/>
+						<mp:Output name="Multiply1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input name="Multiply1"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="MV/total"/>
+						<mp:Output name="Add1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="Add1"/>
+						<mp:Output fb:x="0" fb:y="0" table="MV/total"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:AdditionalProp name="Variables">
+				<fe:Row Default="0" Name="total" Type="Integer" streamVariables="false"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="XMLUpdate1" type="XMLUpdate">
+			<fb:Description height="70" visible="true" width="457" x="86" y="288">
+				<fb:Property name="Text">Order要素の子要素の最後にAmount要素を差し込みます
+「挿入」タブでは次のように設定します
+・「フィールド名」には amount を設定します。直前のマッパーでこのフィールドに値を設定します。
+・「対象XPath式」には/Order を設定します。
+・「要素名または属性名」には Amount を設定します。</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Insert">
+				<fe:Row Name="amount" TargetNode="Amount" TargetPath="/Order"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="Mapper2" type="Mapper2">
+			<fb:Description height="30" visible="true" width="203" x="85" y="223">
+				<fb:Property name="Text">合計金額をXMLUpdateコンポーネントの
+「挿入」タブのフィールドにマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="CP/CP:Mapper1/Variables/total"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:XMLUpdate1/Insert/amount"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="XMLUpdate1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="XMLUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="XMLMerge">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="239" width="408" x="289" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">注文情報を表すXMLを読み込み、そのXMLに出荷情報を表すXMLをマージします
+
+注文情報を表すXMLファイルの形式は次のようになっています
+
+&lt;Order&gt;
+    &lt;Name/&gt;
+    &lt;Address/&gt;
+    &lt;Items&gt;
+        &lt;Item&gt;
+            &lt;Name/&gt;
+            &lt;Type/&gt;
+            &lt;Price/&gt;
+            &lt;Quantity/&gt;
+        &lt;/Item&gt;
+    &lt;/Items&gt;
+&lt;/Order&gt;
+
+この Order 要素の子要素の最後に出荷情報を表すXMLをマージします</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="197" x="52" y="118">
+				<fb:Property name="Text">注文情報が格納されている
+XMLファイルを読み込みます
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/order.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef>
+						<fe:Field expanded="true" name="Order" nodeType="Element" repeat="false" type="String">
+							<fe:Field name="Name" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field name="Address" nodeType="Element" repeat="false" type="String"/>
+							<fe:Field expanded="true" name="Items" nodeType="Element" repeat="false" type="String">
+								<fe:Field expanded="true" name="Item" nodeType="Element" repeat="true" type="String">
+									<fe:Field name="Name" nodeType="Element" repeat="false" type="String"/>
+									<fe:Field name="Type" nodeType="Element" repeat="false" type="String"/>
+									<fe:Field name="Price" nodeType="Element" repeat="false" type="Integer"/>
+									<fe:Field name="Quantity" nodeType="Element" repeat="false" type="Integer"/>
+								</fe:Field>
+							</fe:Field>
+						</fe:Field>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="186" name="FileGet2" type="FileSystem(Get)">
+			<fb:Description height="30" visible="true" width="209" x="120" y="186">
+				<fb:Property name="Text">出荷情報が格納されている
+XMLファイルを読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/shipping.xml</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="XMLMerge1" type="XMLMerge">
+			<fb:Description height="177" visible="true" width="491" x="83" y="290">
+				<fb:Property name="Text">2つのXMLをマージします
+
+まず、ベースとなるXMLは注文情報なので、「ベースとするXML」はFileGet1を指定します
+次に「更新」タブでマージするための設定を行います
+
+1) 「対象XPath式」でベースとするXMLのどの要素にXMLを差し込むかを指定します
+   ここではOrder要素の子要素にマージしたいので /Order とします
+
+2) 「参照元XML」で差し込む側のXMLを指定します
+   ここではFileGet2を選択します
+
+3) 「参照XPath式」で「参照元XML」のどの要素をベースとなるXMLに差し込むかを指定します
+   ここではXML全体を差し込みたいのでルート要素を表す /ShippingInformation を指定します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Dest">FileGet1</fe:Property>
+			<fe:AdditionalProp name="Merge">
+				<fe:Row Name="/Order" Source="FileGet2" SourcePath="/ShippingInformation"/>
+			</fe:AdditionalProp>
+			<fe:Input>
+				<fe:Item>Link2</fe:Item>
+				<fe:Item>Link4</fe:Item>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="XML">
+					<fe:Property name="DTDFilePath"/>
+					<fe:Property name="Normalize">false</fe:Property>
+					<fe:Property name="Validate">false</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputForm">(none)</fe:Property>
+					<fe:Property name="OutputXMLDeclaration">true</fe:Property>
+					<fe:Property name="EmptyTag">true</fe:Property>
+					<fe:FieldDef/>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="FileGet2"/>
+			<fe:Output name="XMLMerge1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="XMLMerge1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="XMLMerge1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

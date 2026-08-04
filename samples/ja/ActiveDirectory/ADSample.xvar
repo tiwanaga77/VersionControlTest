@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:External name="ADSample" xmlns:fe="http://www.infoteria.com/asteria/flowengine">
+	<fe:Variables type="constants">
+		<fe:Field default="Administrator@VMAD2008.dev" id="9175636d-473b-48b8-8282-f76d3e0ab4d9" name="ログオン名" readonly="true" type="String"/>
+		<fe:Field default="Windows2008ServerR2" id="68683a82-98cd-4695-8b34-ee16d4e610d6" name="パスワード" readonly="true" type="String"/>
+	</fe:Variables>
+</fe:External>
