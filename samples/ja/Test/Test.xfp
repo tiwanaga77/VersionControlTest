@@ -61,7 +61,7 @@
 						<mp:Property name="TimeZone">(default)</mp:Property>
 						<mp:Property name="Locale">(default)</mp:Property>
 					</mp:Function>
-					<mp:Function fb:x="118" fb:y="50" name="FormatDate1" type="FormatDateStd">
+					<mp:Function fb:x="118" fb:y="50" name="FormatDate1" type="FORMATDATE">
 						<mp:Property name="Format">yyyy/MM/dd HH:mm:ss</mp:Property>
 						<mp:Property name="TimeZone">(default)</mp:Property>
 						<mp:Property name="Locale">(default)</mp:Property>
