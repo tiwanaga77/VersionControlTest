@@ -135,7 +135,7 @@
 				<fe:Stream format="Any"/>
 			</fe:Output>
 		</fe:Component>
-		<fe:Component fb:x="16" fb:y="424" name="PDF1" type="PDF">
+		<fe:Component fb:x="16" fb:y="424" name="PDF1" type="PDF2">
 			<fb:Description height="43" visible="true" width="254" x="52" y="424">
 				<fb:Property name="Text">Handbookに追加するPDFを作成します
 起動したExcelでdata/テンプレート.xlsxを開きます</fb:Property>
@@ -436,9 +436,9 @@
 			<fe:Property name="UseConnection">false</fe:Property>
 			<fe:Property name="Connection"/>
 			<fe:Property name="ConnectionInfo" unfold="true">
-				<fe:Property name="ServerURL"></fe:Property>
-				<fe:Property name="LoginUserName"></fe:Property>
-				<fe:Property name="LoginPassword"></fe:Property>
+				<fe:Property name="ServerURL"/>
+				<fe:Property name="LoginUserName"/>
+				<fe:Property name="LoginPassword"/>
 				<fe:Property name="UseProxy">false</fe:Property>
 			</fe:Property>
 			<fe:Property name="Title">神奈川</fe:Property>
