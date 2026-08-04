@@ -1,0 +1,4045 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2014-01-16T16:30:04.747 JST" fb:idSeq="17" fb:version="1.0" id="00fd4bf9-91de-4320-b314-96d2f8264027" name="ADSample" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.8.0.8117</fb:Property>
+	<fb:Property name="UpdateVersion">4.8.0.8117</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:External filepath="ADSample.xvar" name="ADSample">
+		<fe:Variables type="constants">
+			<fe:Field default="Administrator@VMAD2008.dev" id="9175636d-473b-48b8-8282-f76d3e0ab4d9" name="ログオン名" readonly="true" type="String"/>
+			<fe:Field default="Windows2008ServerR2" id="68683a82-98cd-4695-8b34-ee16d4e610d6" name="パスワード" readonly="true" type="String"/>
+		</fe:Variables>
+	</fe:External>
+	<fe:Flow id="Flow17" name="はじめに">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="654" width="507" x="78" y="15">
+			<fb:Property name="Background">ffffffff</fb:Property>
+			<fb:Property name="Text">ADSampleについて----------------------------------------------------
+
+事前準備
+○ActiveDirectoryへSSLで接続するための証明書をManagementConsoleでインポートを行います
+※証明書のインポートの後にWARPの再起動が必要です
+
+○ActiveDirectoryへ接続するためのADSampleConnectionという名前のJNDIコネクションを作成します
+※ActiveDirectoryへの接続情報を事前に用意しておいてください
+※ADAuthコンポーネントを配置してダブルクリックすることで簡単に作成することができます
+
+○ADSample.xvarに接続するためのログオン名とパスワードを設定します
+
+サンプル初期化-------------------------------------------------------
+○まず「１サンプル初期化」フローを実行します。
+正常に実行すると、接続先のActiveDirectoryへ以下のグループとユーザーを作成します
+グループ
+　会社
+　子会社
+ユーザー
+　伊藤博文
+　黒田清隆
+　山縣有朋
+　松方正義
+※「１サンプル初期化」フローを実行することで、サンプルを初期状態へ戻すことができます
+
+フロー説明------------------------------------------------------------
+１から６のフローを順に実行していき、その都度「社員リストHTML」で社員構成を確認します
+
+○２新入社員登録
+　桂太郎、西園寺公望、山本権兵衛の3名を追加します
+
+○３新規事業開始
+「五輪対策室」というグループを追加して、大隈、西園寺をメンバーとします
+
+○４異動
+山縣を子会社へ異動します
+
+○５退社
+西園寺公望を削除します
+
+○６再編
+「会社」と「子会社」の社員構成を変更します
+
+○社員リスト
+全社員の情報をレコードで取得します
+
+○社員リストHTML
+会社と子会社の社員を表示するHTMLを返します
+</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="84" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow9" name="１サンプル初期化">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="180" width="176" x="23" y="134">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="180" width="176" x="25" y="343">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">作成</fb:Property>
+		</fb:Description>
+		<fb:Description height="102" width="320" x="106" y="18">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">準備
+ADSampleConnectionという名前のJNDIコネクション
+ADSample.xvarという外部変数にログオン名とパスワードを設定
+
+
+</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="SubFlow1" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="68" x="120" y="152">
+				<fb:Property name="Text">ユーザー削除</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">初期化ユーザー削除</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="SubFlow2" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="66" x="120" y="254">
+				<fb:Property name="Text">グループ削除</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">初期化グループ削除</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="356" name="SubFlow3" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="68" x="120" y="356">
+				<fb:Property name="Text">ユーザー作成</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">初期化ユーザー作成</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="458" name="SubFlow4" type="SubFlow2">
+			<fb:Description height="17" visible="true" width="66" x="120" y="458">
+				<fb:Property name="Text">グループ作成</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AssociatedFlow">初期化グループ作成</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="560" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="254" fb:y="84" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="290" y="84">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="SubFlow1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="SubFlow1"/>
+			<fe:Output name="SubFlow2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="SubFlow2"/>
+			<fe:Output name="SubFlow3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="SubFlow3"/>
+			<fe:Output name="SubFlow4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="SubFlow4"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow10" name="２新入社員登録">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="308" width="336" x="10" y="226">
+			<fb:Property name="Background">40ccffcc</fb:Property>
+			<fb:Property name="Text">新入社員を作成</fb:Property>
+		</fb:Description>
+		<fb:Description height="312" width="578" x="368" y="225">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">新入社員をグループに追加</fb:Property>
+		</fb:Description>
+		<fb:Description height="119" width="315" x="31" y="74">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="17" width="135" x="228" y="25">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：新入社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="210" x="120" y="254">
+				<fb:Property name="Text">CSVファイルから新入社員情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/新入社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="ログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ" type="String"/>
+						<fe:Field name="所属グループ２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="424" name="ADUserCreate1" type="ADUserCreate">
+			<fb:Description height="30" visible="true" width="199" x="120" y="424">
+				<fb:Property name="Text">マッピングされた情報よりユーザーを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="エントリ名" RealName="cn" Value=""/>
+				<fe:Row Name="性" RealName="sn" Value=""/>
+				<fe:Row Name="フリガナ（性）" RealName="msDS-PhoneticLastName" Value=""/>
+				<fe:Row Name="名" RealName="givenName" Value=""/>
+				<fe:Row Name="フリカナ（名）" RealName="msDS-PhoneticFirstName" Value=""/>
+				<fe:Row Name="表示名" RealName="displayName" Value=""/>
+				<fe:Row Name="ユーザログオン名" RealName="userPrincipalName" Value=""/>
+				<fe:Row Name="パスワード" RealName="unicodePwd" Value=""/>
+				<fe:Row Name="会社名" RealName="company" Value=""/>
+				<fe:Row Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName" Value=""/>
+				<fe:Row Name="部署" RealName="department" Value=""/>
+				<fe:Row Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment" Value=""/>
+				<fe:Row Name="役職" RealName="title" Value=""/>
+				<fe:Row Name="電子メール" RealName="mail" Value=""/>
+				<fe:Row Name="携帯電話" RealName="mobile" Value=""/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="492" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="356" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="356">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="16" fb:y="356" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="77" x="16" y="392">
+							<fb:Property name="Text">Password2014</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">Password2014</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/性"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/性"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/性フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（性）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリカナ（名）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/表示名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/会社名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/会社名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/会社名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（会社）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/部署"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/部署"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link11">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/部署名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（部署）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link12">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/役職"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/役職"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link13">
+						<mp:Input name="Const1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/パスワード"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/ユーザログオン名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link16">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/メールアドレス"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/電子メール"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link17">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/携帯電話番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/携帯電話"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="322" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="133" x="426" y="322">
+				<fb:Property name="Text">所属グループを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/所属グループ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="424" name="ADGroupUpdate1" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="430" y="424">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="492" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="322" name="BranchStart1" type="BranchFilterStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.グループ２ != ""</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="492" name="End3" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="356" name="Mapper4" type="Mapper2">
+			<fb:Description height="17" visible="true" width="134" x="732" y="356">
+				<fb:Property name="Text">所属グループ２がある場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchStart1.branch/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="424" name="ADGroupUpdate2" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="732" y="424">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="492" name="End4" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="254" name="Mapper5" type="Mapper2">
+			<fb:Description height="17" visible="true" width="170" x="664" y="254">
+				<fb:Property name="Text">所属グループ２を確認します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/所属グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADUserCreate1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADUserCreate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="ADGroupUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="ADGroupUpdate1"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link10">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="End3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link11">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="ADGroupUpdate2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link12">
+			<fe:Input name="ADGroupUpdate2"/>
+			<fe:Output name="End4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link13">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link15">
+			<fe:Input name="Mapper5"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link14">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" name="グループ２" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow11" name="３新規事業開始">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="173" width="150" x="31" y="224">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">新規事業グループを作成して、社員をグループに追加</fb:Property>
+		</fb:Description>
+		<fb:Description height="119" width="314" x="29" y="75">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="288" name="ADGroupCreate1" type="ADGroupCreate">
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="グループ名" RealName="cn" Value="五輪対策室"/>
+				<fe:Row Name="メンバー" RealName="member" Value="大隈重信"/>
+				<fe:Row Name="メンバー2" RealName="member" Value="西園寺公望"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="356" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADGroupCreate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="ADGroupCreate1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow12" name="４異動">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="204" x="120" y="254">
+			<fb:Property name="Background">ffffff</fb:Property>
+			<fb:Property name="Text">CSVファイルから異動する社員の情報を取得します</fb:Property>
+		</fb:Description>
+		<fb:Description height="159" width="295" x="29" y="224">
+			<fb:Property name="Background">40ccffcc</fb:Property>
+			<fb:Property name="Text">異動情報の取得</fb:Property>
+		</fb:Description>
+		<fb:Description height="465" width="307" x="368" y="74">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">異動する社員をグループから削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="297" width="311" x="32" y="557">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">社員情報を更新</fb:Property>
+		</fb:Description>
+		<fb:Description height="119" width="306" x="31" y="79">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="331" width="577" x="378" y="552">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">社員をグループに登録</fb:Property>
+		</fb:Description>
+		<fb:Description height="17" width="135" x="228" y="22">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：異動社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="30" visible="true" width="204" x="120" y="254">
+				<fb:Property name="Background">ffffff</fb:Property>
+				<fb:Property name="Text">CSVファイルから異動する社員の情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/異動社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ" type="String"/>
+						<fe:Field name="所属グループ２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="118" name="ADGroupSearch1" type="ADGroupSearch">
+			<fb:Description height="17" visible="true" width="210" x="464" y="121">
+				<fb:Property name="Text">異動する社員が属するグループを検索します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="SizeLimit">0</fe:Property>
+			<fe:Property name="DereferenceLinks">true</fe:Property>
+			<fe:Property name="LoopProcess">true</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="AND" Name="メンバー" RealName="member" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="グループ名" RealName="cn"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="Mapper2" type="Mapper2">
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupSearch1/Query/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/メンバー名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="254" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="126" x="460" y="254">
+				<fb:Property name="Text">グループが存在する場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchByException1/SD:F/グループ名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/メンバー名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="322" name="ADGroupUpdate1" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="205" x="460" y="322">
+				<fb:Property name="Text">グループメンバーから異動する社員を削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="削除" ModeName="DELETE" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="798" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="662" name="Mapper4" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="662">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/性"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/性"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/性フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（性）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリカナ（名）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/メールアドレス"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/電子メール"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/携帯電話番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/携帯電話"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/会社名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/会社名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/会社名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（会社）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/部署"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/部署"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/部署名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（部署）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link11">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/役職"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/役職"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link12">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Query/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="730" name="ADUserUpdate1" type="ADUserUpdate">
+			<fb:Description height="30" visible="true" width="226" x="120" y="730">
+				<fb:Property name="Text">マッピングされた情報よりユーザーを更新します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="OR" Name="エントリ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="性" RealName="sn" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（性）" RealName="msDS-PhoneticLastName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="名" RealName="givenName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリカナ（名）" RealName="msDS-PhoneticFirstName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="電子メール" RealName="mail" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="携帯電話" RealName="mobile" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="会社名" RealName="company" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="部署" RealName="department" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="役職" RealName="title" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="エントリ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="662" name="Mapper5" type="Mapper2">
+			<fb:Description height="17" visible="true" width="126" x="426" y="662">
+				<fb:Property name="Text">所属グループを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/所属グループ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="764" name="ADGroupUpdate2" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="426" y="764">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="832" name="End3" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="662" name="BranchStart1" type="BranchFilterStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.グループ２ != ""</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="832" name="End4" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="696" name="Mapper6" type="Mapper2">
+			<fb:Description height="17" visible="true" width="127" x="732" y="696">
+				<fb:Property name="Text">所属グループ２がある場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchStart1.branch/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate3/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate3/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="764" name="ADGroupUpdate3" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="732" y="764">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="832" name="End5" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="594" name="Mapper7" type="Mapper2">
+			<fb:Description height="17" visible="true" width="134" x="664" y="594">
+				<fb:Property name="Text">所属グループ２を確認します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/所属グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="186" name="BranchByException1" type="BranchByException">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BranchBy">ByString</fe:Property>
+			<fe:Property name="ExceptionCode">2</fe:Property>
+			<fe:Property name="ExceptionType"/>
+			<fe:Property name="CaseSensitive">false</fe:Property>
+			<fe:Property name="MessagePattern">.*</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="492" fb:y="220" name="End6" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="390" name="LoopEnd1" type="LoopEnd">
+			<fb:Description height="17" visible="true" width="141" x="460" y="390">
+				<fb:Property name="Text">グループで処理をループします</fb:Property>
+			</fb:Description>
+			<fe:Property name="LoopStart">ADGroupSearch1</fe:Property>
+			<fe:Property name="PackRecords">PackRecords</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="424" fb:y="458" name="LoopEnd2" type="LoopEnd">
+			<fb:Description height="17" visible="true" width="186" x="460" y="458">
+				<fb:Property name="Text">異動するユーザーで処理をループします</fb:Property>
+			</fb:Description>
+			<fe:Property name="LoopStart">RecordGet1</fe:Property>
+			<fe:Property name="PackRecords">PackRecords</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="594" name="RecordGet2" type="CSV(Get)">
+			<fb:Description height="30" visible="true" width="200" x="120" y="594">
+				<fb:Property name="Text">CSVファイルから異動する社員の情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/異動社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ" type="String"/>
+						<fe:Field name="所属グループ２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADGroupSearch1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="ADGroupUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="ADUserUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link10">
+			<fe:Input name="ADUserUpdate1"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link12">
+			<fe:Input name="Mapper5"/>
+			<fe:Output name="ADGroupUpdate2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link13">
+			<fe:Input name="ADGroupUpdate2"/>
+			<fe:Output name="End3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link14">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="End4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link15">
+			<fe:Input name="Mapper6"/>
+			<fe:Output name="ADGroupUpdate3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link16">
+			<fe:Input name="ADGroupUpdate3"/>
+			<fe:Output name="End5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link17">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper6"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link18">
+			<fe:Input name="Mapper7"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="ADGroupSearch1"/>
+			<fe:Output name="BranchByException1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link21">
+			<fe:Input name="BranchByException1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link22">
+			<fe:Input name="BranchByException1" state="branch"/>
+			<fe:Output name="End6"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="ADGroupUpdate1"/>
+			<fe:Output name="LoopEnd1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link11">
+			<fe:Input name="LoopEnd1"/>
+			<fe:Output name="LoopEnd2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link19">
+			<fe:Input name="LoopEnd2"/>
+			<fe:Output name="RecordGet2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link20">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link23">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link24">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper7"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" name="メンバー名" type="String"/>
+			<fe:Field access="private" name="グループ２" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow13" name="５退社">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="119" width="310" x="29" y="73">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="286" width="321" x="27" y="221">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">社員を削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="17" width="135" x="228" y="25">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：退社社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="210" x="120" y="254">
+				<fb:Property name="Text">CSVファイルから退社社員情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/退社社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="390" name="ADUserDelete1" type="ADUserDelete">
+			<fb:Description height="17" visible="true" width="88" x="120" y="390">
+				<fb:Property name="Text">社員を削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="エントリ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="エントリ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="458" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="322">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserDelete1/Query/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADUserDelete1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADUserDelete1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow3" name="６再編">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="147" width="284" x="32" y="224">
+			<fb:Property name="Background">40ccffcc</fb:Property>
+			<fb:Property name="Text">再編情報の取得</fb:Property>
+		</fb:Description>
+		<fb:Description height="122" width="299" x="24" y="73">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="447" width="306" x="334" y="74">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">対象社員をグループから削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="305" width="286" x="46" y="550">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">社員情報を更新</fb:Property>
+		</fb:Description>
+		<fb:Description height="335" width="578" x="372" y="550">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">社員をグループに登録</fb:Property>
+		</fb:Description>
+		<fb:Description height="17" width="135" x="228" y="25">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：再編社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="118" name="ADGroupSearch1" type="ADGroupSearch">
+			<fb:Description height="30" visible="true" width="200" x="426" y="118">
+				<fb:Property name="Text">社員が属するグループを検索します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="SizeLimit">0</fe:Property>
+			<fe:Property name="DereferenceLinks">true</fe:Property>
+			<fe:Property name="LoopProcess">true</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="AND" Name="メンバー" RealName="member" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="グループ名" RealName="cn"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="Mapper2" type="Mapper2">
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupSearch1/Query/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/メンバー名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="254" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="119" x="426" y="254">
+				<fb:Property name="Text">グループが存在する場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchByException1/SD:F/グループ名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/メンバー名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="322" name="ADGroupUpdate1" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="197" x="426" y="322">
+				<fb:Property name="Text">グループメンバーから異動する社員を削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="削除" ModeName="DELETE" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="662" name="Mapper4" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="662">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/性"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/性"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/性フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（性）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリカナ（名）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/メールアドレス"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/電子メール"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/携帯電話番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/携帯電話"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/会社名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/会社名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/会社名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（会社）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/部署"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/部署"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/部署名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/フリガナ（部署）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link11">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/役職"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Result/役職"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link12">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserUpdate1/Query/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link13">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/所属グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="730" name="ADUserUpdate1" type="ADUserUpdate">
+			<fb:Description height="30" visible="true" width="197" x="120" y="730">
+				<fb:Property name="Text">マッピングされた情報よりユーザーを更新します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="OR" Name="エントリ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="性" RealName="sn" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（性）" RealName="msDS-PhoneticLastName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="名" RealName="givenName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリカナ（名）" RealName="msDS-PhoneticFirstName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="電子メール" RealName="mail" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="携帯電話" RealName="mobile" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="会社名" RealName="company" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="部署" RealName="department" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment" Value=""/>
+				<fe:Row Mode="更新" ModeName="UPDATE" Name="役職" RealName="title" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="エントリ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="662" name="Mapper5" type="Mapper2">
+			<fb:Description height="17" visible="true" width="126" x="426" y="662">
+				<fb:Property name="Text">所属グループを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/所属グループ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="764" name="ADGroupUpdate2" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="429" y="764">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="662" name="BranchStart1" type="BranchFilterStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.グループ２ != ""</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="832" name="End4" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="696" name="Mapper6" type="Mapper2">
+			<fb:Description height="17" visible="true" width="127" x="732" y="696">
+				<fb:Property name="Text">所属グループ２がある場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchStart1.branch/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate3/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate3/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="764" name="ADGroupUpdate3" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="732" y="764">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="696" fb:y="832" name="End5" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="594" name="Mapper7" type="Mapper2">
+			<fb:Description height="17" visible="true" width="134" x="664" y="594">
+				<fb:Property name="Text">所属グループ２を確認します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/所属グループ２"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="186" name="BranchByException1" type="BranchByException">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BranchBy">ByString</fe:Property>
+			<fe:Property name="ExceptionCode">2</fe:Property>
+			<fe:Property name="ExceptionType"/>
+			<fe:Property name="CaseSensitive">false</fe:Property>
+			<fe:Property name="MessagePattern">.*</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="220" name="End6" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="390" name="LoopEnd1" type="LoopEnd">
+			<fb:Description height="17" visible="true" width="141" x="426" y="390">
+				<fb:Property name="Text">グループで処理をループします</fb:Property>
+			</fb:Description>
+			<fe:Property name="LoopStart">ADGroupSearch1</fe:Property>
+			<fe:Property name="PackRecords">PackRecords</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="458" name="LoopEnd2" type="LoopEnd">
+			<fb:Description height="17" visible="true" width="143" x="426" y="458">
+				<fb:Property name="Text">ユーザーで処理をループします</fb:Property>
+			</fb:Description>
+			<fe:Property name="LoopStart">RecordGet1</fe:Property>
+			<fe:Property name="PackRecords">PackRecords</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="594" name="RecordGet2" type="CSV(Get)">
+			<fb:Description height="30" visible="true" width="200" x="120" y="594">
+				<fb:Property name="Text">CSVファイルから社員の情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/再編社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ" type="String"/>
+						<fe:Field name="所属グループ２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="186" x="120" y="254">
+				<fb:Property name="Text">CSVファイルから再編情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/再編社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ" type="String"/>
+						<fe:Field name="所属グループ２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="798" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="832" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADGroupSearch1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="ADGroupUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="ADUserUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link12">
+			<fe:Input name="Mapper5"/>
+			<fe:Output name="ADGroupUpdate2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link14">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="End4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link15">
+			<fe:Input name="Mapper6"/>
+			<fe:Output name="ADGroupUpdate3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link16">
+			<fe:Input name="ADGroupUpdate3"/>
+			<fe:Output name="End5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link17">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper6"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link18">
+			<fe:Input name="Mapper7"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="ADGroupSearch1"/>
+			<fe:Output name="BranchByException1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link21">
+			<fe:Input name="BranchByException1"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link22">
+			<fe:Input name="BranchByException1" state="branch"/>
+			<fe:Output name="End6"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="ADGroupUpdate1"/>
+			<fe:Output name="LoopEnd1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link11">
+			<fe:Input name="LoopEnd1"/>
+			<fe:Output name="LoopEnd2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link20">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link10">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper5"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link13">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper7"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link19">
+			<fe:Input name="ADUserUpdate1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link23">
+			<fe:Input name="ADGroupUpdate2"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link24">
+			<fe:Input name="LoopEnd2"/>
+			<fe:Output name="RecordGet2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" name="メンバー名" type="String"/>
+			<fe:Field access="private" name="グループ２" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow7" name="初期化ユーザー削除">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="106" width="306" x="25" y="84">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="372" width="295" x="14" y="213">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">社員を削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="372" width="360" x="391" y="215">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">新入社員を削除</fb:Property>
+		</fb:Description>
+		<fb:Description height="17" width="224" x="228" y="27">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：初期社員.csv、新入社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="220" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="186" x="120" y="220">
+				<fb:Property name="Text">CSVファイルから社員情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/初期社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="ログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属するグループ" type="String"/>
+						<fe:Field name="所属するグループ2" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="322">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserDelete1/Query/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="424" name="ADUserDelete1" type="ADUserDelete">
+			<fb:Description height="17" visible="true" width="104" x="120" y="424">
+				<fb:Property name="Text">ユーザーを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="エントリ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="エントリ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="492" fb:y="220" name="RecordGet2" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="210" x="528" y="220">
+				<fb:Property name="Text">CSVファイルから新入社員情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/新入社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="ログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属するグループ" type="String"/>
+						<fe:Field name="所属するグループ2" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="492" fb:y="526" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="492" fb:y="322" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="528" y="322">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet2/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserDelete2/Query/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="492" fb:y="424" name="ADUserDelete2" type="ADUserDelete">
+			<fb:Description height="17" visible="true" width="104" x="528" y="424">
+				<fb:Property name="Text">ユーザーを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="エントリ名" RealName="cn" Relation="=" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="エントリ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="526" name="LoopEnd1" type="LoopEnd">
+			<fe:Property name="LoopStart">RecordGet1</fe:Property>
+			<fe:Property name="PackRecords">PackRecords</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADUserDelete1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="RecordGet2"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="ADUserDelete2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="ADUserDelete2"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="ADUserDelete1"/>
+			<fe:Output name="LoopEnd1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link10">
+			<fe:Input name="LoopEnd1"/>
+			<fe:Output name="RecordGet2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow6" name="初期化グループ削除">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="115" width="292" x="35" y="79">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="369" width="287" x="31" y="215">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">グループを削除</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="288" name="ADGroupDelete1" type="ADGroupDelete">
+			<fb:Description height="17" visible="true" width="126" x="120" y="288">
+				<fb:Property name="Text">会社グループを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="390" name="ADGroupDelete2" type="ADGroupDelete">
+			<fb:Description height="17" visible="true" width="138" x="120" y="390">
+				<fb:Property name="Text">子会社グループを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="子会社"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="492" name="ADGroupDelete3" type="ADGroupDelete">
+			<fb:Description height="17" visible="true" width="162" x="120" y="492">
+				<fb:Property name="Text">五輪対策室グループを削除します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException">@$@system@$@	Ignore</fe:Property>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="五輪対策室"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="594" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="ADGroupDelete1"/>
+			<fe:Output name="ADGroupDelete2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADGroupDelete2"/>
+			<fe:Output name="ADGroupDelete3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="ADGroupDelete3"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADGroupDelete1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow5" name="初期化ユーザー作成">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="17" visible="false" width="131" x="0" y="0"/>
+		<fb:Description height="114" width="320" x="31" y="81">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="296" width="331" x="27" y="220">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">社員を作成</fb:Property>
+		</fb:Description>
+		<fb:Description height="20" width="149" x="228" y="27">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：初期社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="186" x="120" y="254">
+				<fb:Property name="Text">CSVファイルから社員情報を取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/初期社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="ログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="390" name="ADUserCreate1" type="ADUserCreate">
+			<fb:Description height="30" visible="true" width="197" x="120" y="390">
+				<fb:Property name="Text">マッピングされた情報よりユーザーを作成します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="エントリ名" RealName="cn" Value=""/>
+				<fe:Row Name="性" RealName="sn" Value=""/>
+				<fe:Row Name="フリガナ（性）" RealName="msDS-PhoneticLastName" Value=""/>
+				<fe:Row Name="名" RealName="givenName" Value=""/>
+				<fe:Row Name="フリカナ（名）" RealName="msDS-PhoneticFirstName" Value=""/>
+				<fe:Row Name="表示名" RealName="displayName" Value=""/>
+				<fe:Row Name="ユーザログオン名" RealName="userPrincipalName" Value=""/>
+				<fe:Row Name="パスワード" RealName="unicodePwd" Value=""/>
+				<fe:Row Name="会社名" RealName="company" Value=""/>
+				<fe:Row Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName" Value=""/>
+				<fe:Row Name="部署" RealName="department" Value=""/>
+				<fe:Row Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment" Value=""/>
+				<fe:Row Name="役職" RealName="title" Value=""/>
+				<fe:Row Name="電子メール" RealName="mail" Value=""/>
+				<fe:Row Name="携帯電話" RealName="mobile" Value=""/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="458" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="131" x="120" y="322">
+				<fb:Property name="Text">社員情報をマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="16" fb:y="356" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="77" x="16" y="392">
+							<fb:Property name="Text">Password2014</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">Password2014</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/エントリ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/性"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/性"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/性フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（性）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリカナ（名）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/表示名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/会社名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/会社名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link9">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/会社名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（会社）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link10">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/部署"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/部署"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link11">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/部署名フリガナ"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/フリガナ（部署）"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link12">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/役職"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/役職"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link13">
+						<mp:Input name="Const1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/パスワード"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/ユーザログオン名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link16">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/メールアドレス"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/電子メール"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link17">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/携帯電話番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADUserCreate1/Result/携帯電話"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADUserCreate1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADUserCreate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow4" name="初期化グループ作成">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="17" visible="false" width="126" x="0" y="0"/>
+		<fb:Description height="114" width="296" x="30" y="79">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="161" width="219" x="24" y="221">
+			<fb:Property name="Background">40ff99cc</fb:Property>
+			<fb:Property name="Text">グループを作成</fb:Property>
+		</fb:Description>
+		<fb:Description height="388" width="641" x="344" y="82">
+			<fb:Property name="Background">40ccffcc</fb:Property>
+			<fb:Property name="Text">社員をグループに登録</fb:Property>
+		</fb:Description>
+		<fb:Description height="20" width="149" x="228" y="27">
+			<fb:Property name="Background">40333399</fb:Property>
+			<fb:Property name="Text">使用ファイル：初期社員.csv</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="154" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="ADGroupCreate1" type="ADGroupCreate">
+			<fb:Description height="17" visible="true" width="109" x="120" y="254">
+				<fb:Property name="Text">会社グループを作成</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="グループ名" RealName="cn" Value="会社"/>
+				<fe:Row Name="説明" RealName="description" Value="全社員"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="ADGroupCreate2" type="ADGroupCreate">
+			<fb:Description height="17" visible="true" width="121" x="120" y="322">
+				<fb:Property name="Text">子会社グループを作成</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="グループ名" RealName="cn" Value="子会社"/>
+				<fe:Row Name="説明" RealName="description" Value="子会社の社員"/>
+			</fe:AdditionalProp>
+		</fe:Component>
+		<fe:Component fb:x="458" fb:y="84" name="RecordGet1" type="CSV(Get)">
+			<fb:Description height="17" visible="true" width="166" x="494" y="84">
+				<fb:Property name="Text">CSVファイルから社員情報を取得</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/初期社員.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">utf-8</fe:Property>
+			<fe:Property name="StartRow">2</fe:Property>
+			<fe:Property name="GetByLoop">1</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">(none)</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="名前" type="String"/>
+						<fe:Field name="性" type="String"/>
+						<fe:Field name="性フリガナ" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="名フリガナ" type="String"/>
+						<fe:Field name="ログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="会社名フリガナ" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="部署名フリガナ" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="メールアドレス" type="String"/>
+						<fe:Field name="携帯電話番号" type="String"/>
+						<fe:Field name="所属グループ名" type="String"/>
+						<fe:Field name="所属グループ名２" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="186" name="Mapper2" type="Mapper2">
+			<fb:Description height="17" visible="true" width="126" x="426" y="186">
+				<fb:Property name="Text">所属グループを取得します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/所属グループ名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate1/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="356" name="ADGroupUpdate1" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="426" y="356">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="390" fb:y="424" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="254" name="BranchStart1" type="BranchFilterStart">
+			<fe:Property name="Exception"/>
+			<fe:Property name="Condition">$flow.グループ２ != ""</fe:Property>
+			<fe:Property name="EvaluateMode">Any one</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="424" name="End2" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="730" fb:y="288" name="Mapper3" type="Mapper2">
+			<fb:Description height="17" visible="true" width="127" x="766" y="288">
+				<fb:Property name="Text">所属グループ２がある場合</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchStart1.branch/SD:F/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Result/メンバー"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:BranchStart1.branch/SD:F/所属グループ名２"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADGroupUpdate2/Query/グループ名"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="730" fb:y="356" name="ADGroupUpdate2" type="ADGroupUpdate">
+			<fb:Description height="30" visible="true" width="204" x="766" y="356">
+				<fb:Property name="Text">グループにメンバーとしてユーザーを追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">CN=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="" Name="グループ名" RealName="cn" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Mode="追加" ModeName="ADD" Name="メンバー" RealName="member" Value=""/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="グループ名" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="730" fb:y="424" name="End3" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="628" fb:y="186" name="Mapper4" type="Mapper2">
+			<fb:Description height="17" visible="true" width="134" x="664" y="186">
+				<fb:Property name="Text">所属グループ２を確認します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:RecordGet1/SD:F/所属グループ名２"/>
+						<mp:Output fb:x="0" fb:y="0" table="FV/グループ２"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="Mapper2"/>
+			<fe:Output name="ADGroupUpdate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="ADGroupCreate2"/>
+			<fe:Output name="RecordGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADGroupCreate1"/>
+			<fe:Output name="ADGroupCreate2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link8">
+			<fe:Input name="ADGroupUpdate1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link10">
+			<fe:Input name="BranchStart1"/>
+			<fe:Output name="End2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link11">
+			<fe:Input name="Mapper3"/>
+			<fe:Output name="ADGroupUpdate2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link12">
+			<fe:Input name="ADGroupUpdate2"/>
+			<fe:Output name="End3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link13">
+			<fe:Input name="BranchStart1" state="branch"/>
+			<fe:Output name="Mapper3"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link9">
+			<fe:Input name="RecordGet1"/>
+			<fe:Output name="Mapper4"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link14">
+			<fe:Input name="Mapper4"/>
+			<fe:Output name="BranchStart1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADGroupCreate1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Variables>
+			<fe:Field access="private" name="グループ２" type="String"/>
+		</fe:Variables>
+	</fe:Flow>
+	<fe:Flow id="Flow15" name="社員リスト">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="119" width="310" x="29" y="75">
+			<fb:Property name="Background">40ffff99</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="143" width="244" x="32" y="220">
+			<fb:Property name="Background">40ccffcc</fb:Property>
+			<fb:Property name="Text">社員検索</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="ADUserSearch1" type="ADUserSearch">
+			<fb:Description height="17" visible="true" width="149" x="120" y="254">
+				<fb:Property name="Text">会社に所属する社員を検索</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">cn=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="SizeLimit">0</fe:Property>
+			<fe:Property name="DereferenceLinks">true</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="AND" Name="所属するグループ" RealName="memberOf" Relation="=" Value="会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="フルネーム" RealName="cn"/>
+				<fe:Row Name="姓" RealName="sn"/>
+				<fe:Row Name="フリガナ（姓）" RealName="msDS-PhoneticLastName"/>
+				<fe:Row Name="名" RealName="givenName"/>
+				<fe:Row Name="フリカナ（名）" RealName="msDS-PhoneticFirstName"/>
+				<fe:Row Name="ユーザーログオン名" RealName="userPrincipalName"/>
+				<fe:Row Name="会社名" RealName="company"/>
+				<fe:Row Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName"/>
+				<fe:Row Name="部署" RealName="department"/>
+				<fe:Row Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment"/>
+				<fe:Row Name="役職" RealName="title"/>
+				<fe:Row Name="所属するグループ" RealName="memberOf"/>
+				<fe:Row Name="携帯電話" RealName="mobile"/>
+				<fe:Row Name="電子メール" RealName="mail"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="フルネーム" type="String"/>
+						<fe:Field name="姓" type="String"/>
+						<fe:Field name="フリガナ（姓）" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="フリカナ（名）" type="String"/>
+						<fe:Field name="ユーザーログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="フリガナ（会社）" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="フリガナ（部署）" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="所属するグループ" type="String"/>
+						<fe:Field name="携帯電話" type="String"/>
+						<fe:Field name="電子メール" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="322" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADUserSearch1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="ADUserSearch1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow16" name="社員リストHTML">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="119" width="147" x="29" y="75">
+			<fb:Property name="Background">40ffff00</fb:Property>
+			<fb:Property name="Text">認証</fb:Property>
+		</fb:Description>
+		<fb:Description height="95" width="559" x="30" y="221">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">社員検索</fb:Property>
+		</fb:Description>
+		<fb:Description height="145" width="153" x="163" y="354">
+			<fb:Property name="Background">4099ccff</fb:Property>
+			<fb:Property name="Text">HTML出力</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="118" fb:y="16" name="ExternalVariables1" type="ExternalVariables">
+			<fb:Description height="17" visible="true" width="57" x="152" y="16">
+				<fb:Property name="Text">ADSample</fb:Property>
+			</fb:Description>
+			<fe:Property name="FilePath">ADSample.xvar</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="84" name="Mapper1" type="Mapper2">
+			<fb:Description height="30" visible="true" width="204" x="120" y="84">
+				<fb:Property name="Text">ADSample外部変数に設定したログオン名とパスワードをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/ログオン名"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Principal"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="EV/ADSample/パスワード"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:ADAuth1/Credentials"/>
+						<fb:Line type="Curved"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Text">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="152" name="ADAuth1" type="ADAuth">
+			<fb:Description height="17" visible="true" width="184" x="120" y="152">
+				<fb:Property name="Text">ActiveDirectoryで認証をおこないます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Connection">ADSampleConnection</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="Principal"/>
+			<fe:Property name="Credentials"/>
+		</fe:Component>
+		<fe:Component fb:x="84" fb:y="254" name="ADUserSearch1" type="ADUserSearch">
+			<fb:Description height="17" visible="true" width="186" x="120" y="254">
+				<fb:Property name="Text">会社にのみ所属する社員を検索します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">cn=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="SizeLimit">0</fe:Property>
+			<fe:Property name="DereferenceLinks">true</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="AND" Name="所属するグループ" RealName="memberOf" Relation="=" Value="会社"/>
+				<fe:Row AndOr="AND" Name="所属するグループ2" RealName="memberOf" Relation="!=" Value="子会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="フルネーム" RealName="cn"/>
+				<fe:Row Name="姓" RealName="sn"/>
+				<fe:Row Name="フリガナ（姓）" RealName="msDS-PhoneticLastName"/>
+				<fe:Row Name="名" RealName="givenName"/>
+				<fe:Row Name="フリカナ（名）" RealName="msDS-PhoneticFirstName"/>
+				<fe:Row Name="ユーザーログオン名" RealName="userPrincipalName"/>
+				<fe:Row Name="会社名" RealName="company"/>
+				<fe:Row Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName"/>
+				<fe:Row Name="部署" RealName="department"/>
+				<fe:Row Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment"/>
+				<fe:Row Name="役職" RealName="title"/>
+				<fe:Row Name="所属するグループ" RealName="memberOf"/>
+				<fe:Row Name="携帯電話" RealName="mobile"/>
+				<fe:Row Name="電子メール" RealName="mail"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="フルネーム" type="String"/>
+						<fe:Field name="姓" type="String"/>
+						<fe:Field name="フリガナ（姓）" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="フリカナ（名）" type="String"/>
+						<fe:Field name="ユーザーログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="フリガナ（会社）" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="フリガナ（部署）" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="所属するグループ" type="String"/>
+						<fe:Field name="携帯電話" type="String"/>
+						<fe:Field name="電子メール" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="220" fb:y="356" name="Velocity1" type="HTML (Output)">
+			<fe:Property name="Exception"/>
+			<fe:Property name="Mode">Inline</fe:Property>
+			<fe:Property name="Template">&lt;html&gt;&#xd;
+&lt;head&gt;&#xd;
+&lt;title&gt;社員リスト&lt;/title&gt;&#xd;
+&lt;/head&gt;&#xd;
+&lt;body&gt;&#xd;
+&lt;h1&gt;会社&lt;/h1&gt;&#xd;
+&lt;table border="1"&gt;&#xd;
+     &lt;tr&gt;&#xd;
+       &lt;th&gt;名前&lt;/th&gt;&#xd;
+       &lt;th&gt;部署&lt;/th&gt;&#xd;
+       &lt;th&gt;グループ&lt;/th&gt;&#xd;
+     &lt;/tr&gt;&#xd;
+    #foreach ($r in $in.array(0).records)&#xd;
+      &lt;tr&gt;&#xd;
+        &lt;td&gt;$r.field("フルネーム")&lt;/td&gt;&#xd;
+        &lt;td&gt;$r.field("部署")&lt;/td&gt;&#xd;
+        &lt;td&gt;$r.field("所属するグループ")&lt;/td&gt;&#xd;
+      &lt;/tr&gt;&#xd;
+    #end&#xd;
+&lt;/table&gt;&#xd;
+&#xd;
+&lt;h1&gt;子会社&lt;/h1&gt;&#xd;
+&lt;table border="1"&gt;&#xd;
+     &lt;tr&gt;&#xd;
+       &lt;th&gt;名前&lt;/th&gt;&#xd;
+       &lt;th&gt;部署&lt;/th&gt;&#xd;
+       &lt;th&gt;グループ&lt;/th&gt;&#xd;
+     &lt;/tr&gt;&#xd;
+    #foreach ($r in $in.array(1).records)&#xd;
+      &lt;tr&gt;&#xd;
+        &lt;td&gt;$r.field("フルネーム")&lt;/td&gt;&#xd;
+        &lt;td&gt;$r.field("部署")&lt;/td&gt;&#xd;
+        &lt;td&gt;$r.field("所属するグループ")&lt;/td&gt;&#xd;
+      &lt;/tr&gt;&#xd;
+    #end&#xd;
+&lt;/table&gt;&#xd;
+&#xd;
+&lt;/body&gt;&#xd;
+&lt;/html&gt;</fe:Property>
+			<fe:Property name="TemplateFilename">会社情報.vm</fe:Property>
+			<fe:Property name="TemplateHome">Relative</fe:Property>
+			<fe:Property name="TemplateEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="XPathVariablePrefix">fv</fe:Property>
+			<fe:Input>
+				<fe:Item>Link5</fe:Item>
+				<fe:Item>Link6</fe:Item>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="HTML">
+					<fe:Property name="Encoding">utf-8</fe:Property>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="220" fb:y="458" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="356" fb:y="254" name="ADUserSearch2" type="ADUserSearch">
+			<fb:Description height="17" visible="true" width="177" x="392" y="254">
+				<fb:Property name="Text">子会社に所属する社員を検索します</fb:Property>
+			</fb:Description>
+			<fe:Property name="BaseDN">cn=Users</fe:Property>
+			<fe:Property name="SearchScope">OneLevel</fe:Property>
+			<fe:Property name="Timeout">60</fe:Property>
+			<fe:Property name="QueryString"/>
+			<fe:Property name="SizeLimit">0</fe:Property>
+			<fe:Property name="DereferenceLinks">true</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="Exception"/>
+			<fe:Property name="RecordNotFoundException"/>
+			<fe:AdditionalProp name="Query">
+				<fe:Row AndOr="AND" Name="所属するグループ" RealName="memberOf" Relation="=" Value="会社"/>
+				<fe:Row AndOr="AND" Name="所属するグループ2" RealName="memberOf" Relation="=" Value="子会社"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Result">
+				<fe:Row Name="フルネーム" RealName="cn"/>
+				<fe:Row Name="姓" RealName="sn"/>
+				<fe:Row Name="フリガナ（姓）" RealName="msDS-PhoneticLastName"/>
+				<fe:Row Name="名" RealName="givenName"/>
+				<fe:Row Name="フリカナ（名）" RealName="msDS-PhoneticFirstName"/>
+				<fe:Row Name="ユーザーログオン名" RealName="userPrincipalName"/>
+				<fe:Row Name="会社名" RealName="company"/>
+				<fe:Row Name="フリガナ（会社）" RealName="msDS-PhoneticCompanyName"/>
+				<fe:Row Name="部署" RealName="department"/>
+				<fe:Row Name="フリガナ（部署）" RealName="msDS-PhoneticDepartment"/>
+				<fe:Row Name="役職" RealName="title"/>
+				<fe:Row Name="所属するグループ" RealName="memberOf"/>
+				<fe:Row Name="携帯電話" RealName="mobile"/>
+				<fe:Row Name="電子メール" RealName="mail"/>
+			</fe:AdditionalProp>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="フルネーム" type="String"/>
+						<fe:Field name="姓" type="String"/>
+						<fe:Field name="フリガナ（姓）" type="String"/>
+						<fe:Field name="名" type="String"/>
+						<fe:Field name="フリカナ（名）" type="String"/>
+						<fe:Field name="ユーザーログオン名" type="String"/>
+						<fe:Field name="会社名" type="String"/>
+						<fe:Field name="フリガナ（会社）" type="String"/>
+						<fe:Field name="部署" type="String"/>
+						<fe:Field name="フリガナ（部署）" type="String"/>
+						<fe:Field name="役職" type="String"/>
+						<fe:Field name="所属するグループ" type="String"/>
+						<fe:Field name="携帯電話" type="String"/>
+						<fe:Field name="電子メール" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ADAuth1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADUserSearch1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Velocity1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="ADUserSearch1"/>
+			<fe:Output name="Velocity1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="ADUserSearch2"/>
+			<fe:Output name="Velocity1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="ADAuth1"/>
+			<fe:Output name="ADUserSearch2"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

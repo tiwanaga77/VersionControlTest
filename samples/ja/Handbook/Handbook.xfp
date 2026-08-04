@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-30T15:13:53.617 JST" fb:idSeq="3" fb:version="1.0" id="03efa6cb-2ec5-4b69-b472-f994d75bbe68" name="Handbook" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6840</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow1" name="フォルダーから作成">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="200" x="86" y="17">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">指定フォルダからHandbookを作成し、Handbookサーバーへアップロードします</fb:Property>
+		</fb:Description>
+		<fb:Description height="39" width="366" x="86" y="118">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">コネクション情報、URL、ユーザー名、パスワードをそれぞれ設定するか、Handbook用のコネクションを作成して設定してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="HandbookCreateFromFolder1" type="HandbookCreateFromFolder">
+			<fb:Description height="251" visible="true" width="522" x="86" y="161">
+				<fb:Property name="Text">data/神奈川フォルダからHandbookを作成します
+神奈川フォルダ内のファイルはそれぞれ以下のように使用されます
+
+-鎌倉フォルダ
+　鎌倉というタイトルのチャプターが作成されます
+　鎌倉フォルダ下にある「寺.jpg、新緑.jpg、木漏れ日.jpg」の3ファイルはそれぞれファイル名のセクションとなります
+
+-江の島フォルダ
+　江の島というタイトルのチャプターが作成されます
+　江の島フォルダ下にある「花.jpg、岩場.jpg、江ノ電.jpg」の3ファイルはそれぞれファイル名のセクションとなります
+
+-cover.png
+　レイアウトページの表示画像として使用されます
+
+-icon.png
+　情報端末の画面で見た場合のHandbookリストのアイコンとして使用されます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="ConnectException"/>
+			<fe:Property name="APIException"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection"/>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property name="ServerURL"/>
+				<fe:Property name="LoginUserName"/>
+				<fe:Property name="LoginPassword"/>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="Directory">data/神奈川</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="Title"/>
+			<fe:Property name="KeyCode">sample</fe:Property>
+			<fe:Property name="Category">旅先情報</fe:Property>
+			<fe:Property name="Started">2012-01-01T00:00:00</fe:Property>
+			<fe:Property name="Erased">2022-12-31T00:00:00</fe:Property>
+			<fe:Property name="Description">神奈川県の旅先イメージです</fe:Property>
+			<fe:Property name="CopyRight">○○トラベル株式会社</fe:Property>
+			<fe:Property name="CopyRightLayout">1</fe:Property>
+			<fe:Property name="Downloadable">1</fe:Property>
+			<fe:Property name="ExternalAccessable">1</fe:Property>
+			<fe:Property name="SectionLayout">1</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="End1" type="End">
+			<fb:Description height="30" visible="true" width="302" x="86" y="425">
+				<fb:Property name="Text">作成されたHandbookは、HandbookStudioで確認できます</fb:Property>
+			</fb:Description>
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="HandbookCreateFromFolder1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="HandbookCreateFromFolder1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="セクションの追加">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="360" x="85" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">「フォルダーから作成」フローで作成したHandbookにセクションを追加します</fb:Property>
+		</fb:Description>
+		<fb:Description height="39" width="337" x="375" y="87">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">コネクション情報、URL、ユーザー名、パスワードをそれぞれ設定するか、Handbook用のコネクションを作成して設定してください</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="PDF1" type="PDF">
+			<fb:Description height="43" visible="true" width="254" x="52" y="424">
+				<fb:Property name="Text">Handbookに追加するPDFを作成します
+起動したExcelでdata/テンプレート.xlsxを開きます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="OutputType">PDF</fe:Property>
+			<fe:Property name="PCF">
+				<viewtemplate confdir="" filename="C:\asteriahome\flow\home\guest\samples\ja\Handbook\data\テンプレート.xlsx">
+					<pdfsetting>
+						<security annotations="false" contents="false" copy="true" print="true" strength="2"/>
+					</pdfsetting>
+					<component area="Sheet1!A1:G28" fmargin="21.6" font="ＭＳ Ｐゴシック" fontsize="11" hcenter="False" hmargin="21.6" information="False" layout="vertical" leftspace="50.4" name="Sheet1" rightspace="50.4" size="xlPaperA4" underspace="54" upperspace="54" vcenter="False" xscale="494.5" yscale="733.9" zoomToFit="False">
+						<header>
+							<text area="C2:C2" height="13.5" name="部署" valign="center" width="54" x="108" y="13.5"/>
+							<text area="C3:C3" height="13.5" name="氏名" valign="center" width="54" x="108" y="27"/>
+							<text area="E2:E2" height="13.5" name="日付" valign="center" width="54" x="428.3" y="13.5"/>
+						</header>
+						<images/>
+						<records>
+							<table area="B7:F26" name="作業内容">
+								<record height="19.5" y="81">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="81.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="81.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="81.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="81.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="81.4"/>
+								</record>
+								<record height="19.5" y="100.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="100.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="100.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="100.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="100.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="100.9"/>
+								</record>
+								<record height="19.5" y="120">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="120.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="120.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="120.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="120.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="120.4"/>
+								</record>
+								<record height="19.5" y="139.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="139.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="139.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="139.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="139.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="139.9"/>
+								</record>
+								<record height="19.5" y="159">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="159.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="159.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="159.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="159.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="159.4"/>
+								</record>
+								<record height="19.5" y="178.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="178.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="178.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="178.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="178.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="178.9"/>
+								</record>
+								<record height="19.5" y="198">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="198.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="198.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="198.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="198.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="198.4"/>
+								</record>
+								<record height="19.5" y="217.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="217.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="217.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="217.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="217.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="217.9"/>
+								</record>
+								<record height="19.5" y="237">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="237.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="237.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="237.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="237.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="237.4"/>
+								</record>
+								<record height="19.5" y="256.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="256.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="256.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="256.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="256.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="256.9"/>
+								</record>
+								<record height="19.5" y="276">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="276.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="276.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="276.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="276.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="276.4"/>
+								</record>
+								<record height="19.5" y="295.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="295.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="295.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="295.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="295.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="295.9"/>
+								</record>
+								<record height="19.5" y="315">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="315.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="315.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="315.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="315.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="315.4"/>
+								</record>
+								<record height="19.5" y="334.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="334.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="334.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="334.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="334.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="334.9"/>
+								</record>
+								<record height="19.5" y="354">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="354.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="354.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="354.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="354.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="354.4"/>
+								</record>
+								<record height="19.5" y="373.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="373.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="373.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="373.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="373.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="373.9"/>
+								</record>
+								<record height="19.5" y="393">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="393.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="393.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="393.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="393.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="393.4"/>
+								</record>
+								<record height="19.5" y="412.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="412.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="412.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="412.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="412.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="412.9"/>
+								</record>
+								<record height="19.5" y="432">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="432.4"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="432.4"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="432.4"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="432.4"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="432.4"/>
+								</record>
+								<record height="19.5" y="451.5">
+									<field area="B" height="18.8" name="分類" valign="center" width="53.3" x="54.4" y="451.9"/>
+									<field area="C" height="18.8" name="作業名" valign="center" width="53.3" x="108.4" y="451.9"/>
+									<field area="D" height="18.8" name="内容" valign="center" width="265.5" x="162.4" y="451.9"/>
+									<field area="E" height="18.8" name="時間" valign="center" width="53.3" x="428.6" y="451.9"/>
+									<field area="F" height="18.8" name="進捗" valign="center" width="53.3" x="482.6" y="451.9"/>
+								</record>
+							</table>
+						</records>
+						<information/>
+						<body>
+							<text height="13.5" valign="center" width="54" x="54" y="13.5">部署</text>
+							<text height="13.5" valign="center" width="54" x="54" y="27">氏名</text>
+							<text height="13.1" valign="center" width="54" x="54" y="54">作業内容</text>
+							<text height="12.8" valign="center" width="53.3" x="54.4" y="67.9">分類</text>
+							<text height="12.8" valign="center" width="53.3" x="108.4" y="67.9">作業名</text>
+							<text height="12.8" valign="center" width="265.5" x="162.4" y="67.9">内容</text>
+							<text height="12.8" valign="center" width="53.3" x="428.6" y="67.9">時間</text>
+							<text height="12.8" valign="center" width="53.3" x="482.6" y="67.9">進捗</text>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="67.5" ystart="67.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="81" ystart="81"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="100.5" ystart="100.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="120" ystart="120"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="139.5" ystart="139.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="159" ystart="159"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="178.5" ystart="178.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="198" ystart="198"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="217.5" ystart="217.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="237" ystart="237"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="256.5" ystart="256.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="276" ystart="276"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="295.5" ystart="295.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="315" ystart="315"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="334.5" ystart="334.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="354" ystart="354"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="373.5" ystart="373.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="393" ystart="393"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="412.5" ystart="412.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="432" ystart="432"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="451.5" ystart="451.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="54" yend="471" ystart="471"/>
+							<line pensize="xlThin" xend="54" xstart="54" yend="471" ystart="67.5"/>
+							<line pensize="xlThin" xend="108" xstart="108" yend="471" ystart="67.5"/>
+							<line pensize="xlThin" xend="162" xstart="162" yend="471" ystart="67.5"/>
+							<line pensize="xlThin" xend="428.3" xstart="428.3" yend="471" ystart="67.5"/>
+							<line pensize="xlThin" xend="482.3" xstart="482.3" yend="471" ystart="67.5"/>
+							<line pensize="xlThin" xend="536.3" xstart="536.3" yend="471" ystart="67.5"/>
+						</body>
+					</component>
+				</viewtemplate>
+			</fe:Property>
+			<fe:Property name="SecurityLevel">2</fe:Property>
+			<fe:Property name="Security" unfold="true">
+				<fe:Property name="UserPassword"/>
+				<fe:Property name="OwnerPassword"/>
+				<fe:Property name="AllowPrint">true</fe:Property>
+				<fe:Property name="AllowCopy">true</fe:Property>
+				<fe:Property name="AllowEdit">false</fe:Property>
+				<fe:Property name="AllowAnnotate">false</fe:Property>
+			</fe:Property>
+			<fe:AdditionalProp name="Cell">
+				<fe:Row Name="部署" Type="String"/>
+				<fe:Row Name="氏名" Type="String"/>
+				<fe:Row Name="日付" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:Input>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="分類" type="String"/>
+						<fe:Field name="作業名" type="String"/>
+						<fe:Field name="内容" type="String"/>
+						<fe:Field name="時間" type="String"/>
+						<fe:Field name="進捗" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="17" visible="true" width="210" x="52" y="118">
+				<fb:Property name="Text">PDF用のデータをCSVファイルから取得します
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/pdfdata.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">1</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="分類" type="String"/>
+						<fe:Field name="作業名" type="String"/>
+						<fe:Field name="内容" type="String"/>
+						<fe:Field name="時間" type="String"/>
+						<fe:Field name="進捗" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="Converter1" type="Converter">
+			<fb:Description height="30" visible="true" width="202" x="52" y="220">
+				<fb:Property name="Text">CSVストリームをレコードストリームに変換します
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="分類" type="String"/>
+						<fe:Field name="作業名" type="String"/>
+						<fe:Field name="内容" type="String"/>
+						<fe:Field name="時間" type="String"/>
+						<fe:Field name="進捗" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="118" name="HandbookCreateSection1" type="HandbookCreateSection">
+			<fb:Description height="43" visible="true" width="331" x="376" y="137">
+				<fb:Property name="Text">「フォルダーから作成」フローで作成したHandbook「神奈川」に作成したPDFファイル「data/section.pdf」をセクション名「追加のセクション」として追加します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="ConnectException"/>
+			<fe:Property name="APIException"/>
+			<fe:Property name="SectionFileException"/>
+			<fe:Property name="UseConnection">false</fe:Property>
+			<fe:Property name="Connection"/>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property name="ServerURL"></fe:Property>
+				<fe:Property name="LoginUserName"></fe:Property>
+				<fe:Property name="LoginPassword"></fe:Property>
+				<fe:Property name="UseProxy">false</fe:Property>
+			</fe:Property>
+			<fe:Property name="Title">神奈川</fe:Property>
+			<fe:Property name="Section">追加のセクション</fe:Property>
+			<fe:Property name="File">data/section.pdf</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="322" fb:y="220" name="End1" type="End">
+			<fb:Description height="30" visible="true" width="248" x="380" y="220">
+				<fb:Property name="Text">追加されたセクションは、HandbookStudioよりHandbook「神奈川」で確認できます</fb:Property>
+			</fb:Description>
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="322" name="Mapper1" type="Mapper2">
+			<fb:Description height="17" visible="true" width="166" x="52" y="322">
+				<fb:Property name="Text">レコードデータなどをマッピングします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="84" fb:y="152" name="Const1" type="CONST">
+						<fb:Description height="17" visible="true" width="64" x="84" y="188">
+							<fb:Property name="Text">研究開発部</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">研究開発部</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="84" fb:y="220" name="Const2" type="CONST">
+						<fb:Description height="17" visible="true" width="67" x="84" y="256">
+							<fb:Property name="Text">コード書太郎</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">コード書太郎</mp:Property>
+						<mp:Property name="DataType">String</mp:Property>
+						<mp:Property name="EnableMetaCharacter">false</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="84" fb:y="288" name="Now1" type="NOW">
+						<mp:Property name="Format">geeee年M月d日</mp:Property>
+						<mp:Property name="TruncateTime">false</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:Converter1/SD:F/分類"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/分類"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:Converter1/SD:F/作業名"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/作業名"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:Converter1/SD:F/内容"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/内容"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:Converter1/SD:F/時間"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/時間"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:Converter1/SD:F/進捗"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/進捗"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input name="Now1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF1/Cell/日付"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link7">
+						<mp:Input name="Const2"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF1/Cell/氏名"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link8">
+						<mp:Input name="Const1"/>
+						<mp:Output fb:x="0" fb:y="0" table="CP/CP:PDF1/Cell/部署"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:SyncDef component="PDF1"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="526" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="17" visible="true" width="171" x="52" y="526">
+				<fb:Property name="Text">作成したPDFをファイルに保存します
+</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/section.pdf</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="Converter1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="HandbookCreateSection1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Converter1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link6">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="PDF1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="PDF1"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Hooked"/>
+		</fe:Link>
+		<fe:Link name="Link7">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="HandbookCreateSection1"/>
+			<fb:Line type="Hooked">
+				<fb:Shapes>
+					<fb:Shape ex="0.0" ey="18.0" sx="0.0" sy="0.0"/>
+					<fb:Shape ex="270.0" ey="18.0" sx="0.0" sy="18.0"/>
+					<fb:Shape ex="270.0" ey="-468.0" sx="270.0" sy="18.0"/>
+					<fb:Shape ex="306.0" ey="-468.0" sx="270.0" sy="-468.0"/>
+					<fb:Shape ex="306.0" ey="-450.0" sx="306.0" sy="-468.0"/>
+				</fb:Shapes>
+			</fb:Line>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>

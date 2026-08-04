@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:Project fb:created="2012-01-27T16:58:11.188 JST" fb:idSeq="2" fb:version="1.0" id="d50a54c9-1529-44de-b3bb-e2e520b5f57d" name="Excel" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+	<fb:Property name="CreatedVersion">4.6.0.6836</fb:Property>
+	<fb:Property name="UpdateVersion">4.6.0.6837</fb:Property>
+	<fb:Property name="Revision"/>
+	<fb:Property name="Author"/>
+	<fb:Property name="Copyright"/>
+	<fe:Property name="CacheType">true</fe:Property>
+	<fe:Property name="AllowInvoke"/>
+	<fe:Property name="LogSettings" unfold="true">
+		<fe:Property name="LogName"/>
+		<fe:Property name="LogLevel">default</fe:Property>
+		<fe:Property name="OutputDefault">true</fe:Property>
+	</fe:Property>
+	<fe:Flow id="Flow2" name="Excelから読み込み">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="30" width="235" x="85" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">Excelファイルから注文書の情報を取得します</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="84" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="17" visible="true" width="139" x="86" y="87">
+				<fb:Property name="Text">Excelファイルを読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/order.xlsx</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="ExcelPOIInput1" type="ExcelInput3">
+			<fb:Description height="56" visible="true" width="349" x="85" y="151">
+				<fb:Property name="Text">入力ストリームから情報を取得します
+ダブルクリックするとExcelが起動します
+起動したExcelでdata/order.xlsxを開きます
+ExcelのメニューよりExcelビルダーを起動します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="ExternalLibrary">MultiPlatform(Light)</fe:Property>
+			<fe:Property name="InputSheetName"/>
+			<fe:Property name="IgnoreBlankRow">true</fe:Property>
+			<fe:Property name="RoundUpFormula">false</fe:Property>
+			<fe:Property name="MergedCellValue">original</fe:Property>
+			<fe:Property name="SheetNotExist">Exception</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="EMF">
+				<viewtemplate>
+					<component filename="\asteriahome\flow\home\guest\samples\ja\Excel\data\order.xlsx" mode="Input" useFormat="0">
+						<header>
+							<text area="Sheet1!C7:C7" name="振り仮名" useFormat="0"/>
+							<text area="Sheet1!C8:C8" name="名前" useFormat="0"/>
+							<text area="Sheet1!C10:C10" name="郵便番号" useFormat="0"/>
+							<text area="Sheet1!C11:C11" name="住所" useFormat="0"/>
+							<text area="Sheet1!C17:C17" name="電話番号" useFormat="0"/>
+							<text area="Sheet1!G8:G8" name="会社名" useFormat="0"/>
+						</header>
+						<records>
+							<table area="Sheet1!A25:I34" name="注文">
+								<record>
+									<field area="A" key="No" name="番号" useFormat="0"/>
+									<field area="B" key="No" name="商　　品" useFormat="0"/>
+									<field area="C" key="No" name="" useFormat="0"/>
+									<field area="D" key="No" name="" useFormat="0"/>
+									<field area="E" key="No" name="型番/メーカー" useFormat="0"/>
+									<field area="F" key="No" name="" useFormat="0"/>
+									<field area="G" key="No" name="" useFormat="0"/>
+									<field area="H" key="No" name="数 量" useFormat="0"/>
+									<field area="I" key="No" name="" useFormat="0"/>
+								</record>
+							</table>
+						</records>
+						<body/>
+					</component>
+				</viewtemplate>
+			</fe:Property>
+			<fe:AdditionalProp name="Sheet">
+				<fe:Row Default="" Name="Sheet1"/>
+			</fe:AdditionalProp>
+			<fe:AdditionalProp name="Cell">
+				<fe:Row Name="振り仮名" Type="String"/>
+				<fe:Row Name="名前" Type="String"/>
+				<fe:Row Name="郵便番号" Type="String"/>
+				<fe:Row Name="住所" Type="String"/>
+				<fe:Row Name="電話番号" Type="String"/>
+				<fe:Row Name="会社名" Type="String"/>
+			</fe:AdditionalProp>
+			<fe:Output alias="注文">
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="番号" type="String"/>
+						<fe:Field name="商　　品" type="String"/>
+						<fe:Field name="型番/メーカー" type="String"/>
+						<fe:Field name="数 量" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="288" name="EndResponse1" type="EndResponse">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+			<fe:Property name="PackRecords">true</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="Mapper1" type="Mapper2">
+			<fb:Description height="45" visible="true" width="326" x="84" y="220">
+				<fb:Property name="Text">取得した注文情報のRecordストリームをそのまま出力します
+また、取得したセル情報はマッパーの中でログにマッピングしています
+マッピングされたログはFSMCで見ることができます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">true</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/振り仮名"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/名前"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/郵便番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/住所"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/電話番号"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link6">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:ExcelPOIInput1/SD:V/会社名"/>
+						<mp:Output fb:x="0" fb:y="0" table="Log"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="ExcelPOIInput1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="ExcelPOIInput1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow1" name="Excelへの書き込み">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fb:Description height="17" visible="false" width="36" x="0" y="0"/>
+		<fb:Description height="34" width="343" x="84" y="18">
+			<fb:Property name="Background">4000ff00</fb:Property>
+			<fb:Property name="Text">ExcelファイルへCSVファイルから取得した決算情報を書き込みます
+利益がマイナスの場合は文字色を赤色に変更しています</fb:Property>
+		</fb:Description>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="84" name="FileGet1" type="FileSystem(Get)">
+			<fb:Description height="43" visible="true" width="210" x="85" y="84">
+				<fb:Property name="Text">決算情報の保存されているCSVファイルを読み込みます</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="FilePath">data/決算情報.csv</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="FileEncoding">(AutoDetect)</fe:Property>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+			<fe:Output>
+				<fe:Stream format="CSV">
+					<fe:Property name="StartRow">2</fe:Property>
+					<fe:Property name="Separator">,</fe:Property>
+					<fe:Property name="QuotedBy">"</fe:Property>
+					<fe:Property name="QuoteTarget">all</fe:Property>
+					<fe:Property name="NullQuoting">quote</fe:Property>
+					<fe:Property name="EscapeMode">bs</fe:Property>
+					<fe:Property name="ReadTrim">true</fe:Property>
+					<fe:Property name="Encoding">utf-8</fe:Property>
+					<fe:Property name="LineFeed">(No conversion)</fe:Property>
+					<fe:Property name="OutputFieldName">False</fe:Property>
+					<fe:FieldDef>
+						<fe:Field name="期間" type="String"/>
+						<fe:Field name="売上" type="Integer"/>
+						<fe:Field name="利益" type="Integer"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="152" name="Mapper1" type="Mapper2">
+			<fb:Description height="43" visible="true" width="337" x="83" y="153">
+				<fb:Property name="Text">Excelに書き込む情報をマッピングします
+利益がマイナスの場合はExcelのフォントカラーを赤色（red）にします</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Function fb:x="50" fb:y="84" name="If1" type="IF">
+						<fb:Description height="43" visible="true" width="229" x="50" y="120">
+							<fb:Property name="Text">「利益」がプラスの場合は"black"を、マイナスの場合は"red"を「利益_FontColor」にマッピングします</fb:Property>
+						</fb:Description>
+						<mp:Property name="Data">0</mp:Property>
+						<mp:Property name="Compare">&gt;=</mp:Property>
+						<mp:Property name="True">black</mp:Property>
+						<mp:Property name="False">red</mp:Property>
+						<mp:Input>
+							<mp:Item>Link4</mp:Item>
+						</mp:Input>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/期間"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/期間"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/売上"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/売上"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link3">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/利益"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/利益"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link4">
+						<mp:Input fb:x="0" fb:y="0" table="SD/SD:FileGet1/SD:F/利益"/>
+						<mp:Output name="If1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link5">
+						<mp:Input name="If1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/利益_FontColor"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:SyncDef component="ExcelPOIOutput1"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="356" name="FilePut1" type="FileSystem(Put)">
+			<fb:Description height="43" visible="true" width="381" x="84" y="358">
+				<fb:Property name="Text">作成したExcelファイルを保存します
+data/決算情報.xlsx に保存されていますので実行結果を確認してください</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="AlreadyExistException"/>
+			<fe:Property name="FilePath">data/決算情報.xlsx</fe:Property>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="AppendMode">New</fe:Property>
+			<fe:Property name="AllowOverwrite">true</fe:Property>
+			<fe:Property name="FileDelete">false</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="424" name="End1" type="End">
+			<fe:Property name="CommitTransaction">true</fe:Property>
+			<fe:Property name="ReturnValue"/>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="220" name="ExcelPOIOutput1" type="ExcelOutput3">
+			<fb:Description height="108" visible="true" width="437" x="84" y="206">
+				<fb:Property name="Text">ダブルクリックするとExcelが起動します
+起動したExcelでdata/決算情報テンプレート.xlsxを開きます
+ExcelのメニューよりExcelビルダーを起動します
+利益のフィールドでは出力対象書式として文字色をチェックしています
+直前のマッパーで利益に応じて文字色をマッピングしています
+
+「ファイルを更新」を「いいえ」に設定するとテンプレートとなるExcelファイルは更新されません
+作成したExcelファイルは出力ストリームに設定されていますので次のFilePutで保存します</fb:Property>
+			</fb:Description>
+			<fe:Property name="Exception"/>
+			<fe:Property name="ExternalLibrary">MultiPlatform(Light)</fe:Property>
+			<fe:Property name="FilePath">data/決算情報テンプレート.xlsx</fe:Property>
+			<fe:Property name="HomeDirectory">Relative</fe:Property>
+			<fe:Property name="Mode">OverrideNonClear</fe:Property>
+			<fe:Property name="UpdateFile">false</fe:Property>
+			<fe:Property name="AllowBlankRecord">false</fe:Property>
+			<fe:Property name="OutputSheetName"/>
+			<fe:Property name="OutputSheetCreateMode">New</fe:Property>
+			<fe:Property name="ConvertNull">Zero</fe:Property>
+			<fe:Property name="EMF">
+				<viewtemplate>
+					<component filename="\asteriahome\flow\home\guest\samples\ja\Excel\data\決算情報テンプレート.xlsx" mode="Output" useFormat="0">
+						<header/>
+						<records>
+							<table area="Sheet1!A2:C5" name="決算情報">
+								<record>
+									<field area="A" key="No" name="期間" useFormat="0"/>
+									<field area="B" key="No" name="売上" useFormat="0"/>
+									<field area="C" key="No" name="利益" useFormat="2"/>
+								</record>
+							</table>
+						</records>
+						<body/>
+					</component>
+				</viewtemplate>
+			</fe:Property>
+			<fe:AdditionalProp name="Sheet">
+				<fe:Row Default="" Mode="New" Name="Sheet1"/>
+			</fe:AdditionalProp>
+			<fe:Input alias="決算情報">
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="期間" type="String"/>
+						<fe:Field name="売上" type="Integer"/>
+						<fe:Field name="利益" type="Integer"/>
+						<fe:Field name="利益_FontColor" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Input>
+			<fe:Output>
+				<fe:Stream format="Binary"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="FileGet1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="FileGet1"/>
+			<fe:Output name="Mapper1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link5">
+			<fe:Input name="FilePut1"/>
+			<fe:Output name="End1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link3">
+			<fe:Input name="Mapper1"/>
+			<fe:Output name="ExcelPOIOutput1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link4">
+			<fe:Input name="ExcelPOIOutput1"/>
+			<fe:Output name="FilePut1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+</fe:Project>
