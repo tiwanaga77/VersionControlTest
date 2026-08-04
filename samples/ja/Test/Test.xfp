@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fe:Project fb:created="2026-08-04T14:49:29.170 JST" fb:idSeq="1" fb:version="1.0" id="d94957f3-fa05-40df-9121-c9f0bc6f6a46" name="Test" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
+<fe:Project fb:created="2026-08-04T14:49:29.170 JST" fb:idSeq="2" fb:version="1.0" id="d94957f3-fa05-40df-9121-c9f0bc6f6a46" name="Test" version="1.0" xmlns:fb="http://www.infoteria.com/asteria/flowbuilder" xmlns:fe="http://www.infoteria.com/asteria/flowengine" xmlns:mp="http://www.infoteria.com/asteria/mapper">
 	<fb:Property name="CreatedVersion">2406.1800</fb:Property>
 	<fb:Property name="UpdateVersion">2406.1800</fb:Property>
 	<fb:Property name="Revision"/>
@@ -40,33 +40,145 @@
 				<fe:Stream format="Any"/>
 			</fe:Output>
 		</fe:Component>
-		<fe:Component fb:x="50" fb:y="118" name="Velocity1" type="HTML (Output)">
-			<fe:Property name="Exception"/>
-			<fe:Property name="Mode">Inline</fe:Property>
-			<fe:Property name="Template">Hello 世界</fe:Property>
-			<fe:Property name="TemplateFilename"/>
-			<fe:Property name="TemplateHome">Relative</fe:Property>
-			<fe:Property name="TemplateEncoding">(AutoDetect)</fe:Property>
-			<fe:Property name="XPathVariablePrefix">fv</fe:Property>
-			<fe:Output>
-				<fe:Stream format="Text">
-					<fe:Property name="Encoding">utf-8</fe:Property>
-				</fe:Stream>
-			</fe:Output>
-		</fe:Component>
 		<fe:Component fb:x="50" fb:y="220" name="EndResponse1" type="EndResponse">
 			<fe:Property name="CommitTransaction">true</fe:Property>
 			<fe:Property name="ReturnValue"/>
 			<fe:Property name="PackRecords">true</fe:Property>
 		</fe:Component>
+		<fe:Component fb:x="16" fb:y="118" name="Mapper1" type="Mapper2">
+			<fe:Property name="Exception"/>
+			<fe:Property name="LoopProcess">false</fe:Property>
+			<fe:Property name="PassStream">false</fe:Property>
+			<fe:Property name="CountZeroException">false</fe:Property>
+			<fe:Property name="MvMode">2</fe:Property>
+			<fe:Property name="Mappings">
+				<mp:Mappings>
+					<mp:Option layer="レイヤー1" name="inputHideFields"/>
+					<mp:Option layer="レイヤー1" name="outputHideFields"/>
+					<mp:Function fb:x="16" fb:y="50" name="Now1" type="NOW">
+						<mp:Property name="Format">(datetime)</mp:Property>
+						<mp:Property name="TruncateTime">false</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Function fb:x="118" fb:y="50" name="FormatDate1" type="FORMATDATE">
+						<mp:Property name="Format">yyyy/MM/dd HH:mm:ss</mp:Property>
+						<mp:Property name="TimeZone">(default)</mp:Property>
+						<mp:Property name="Locale">(default)</mp:Property>
+					</mp:Function>
+					<mp:Link name="Link1">
+						<mp:Input name="Now1"/>
+						<mp:Output name="FormatDate1"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+					<mp:Link name="Link2">
+						<mp:Input name="FormatDate1"/>
+						<mp:Output fb:x="0" fb:y="0" table="SD/SD:F/date"/>
+						<fb:Line type="Direct"/>
+					</mp:Link>
+				</mp:Mappings>
+			</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Record">
+					<fe:FieldDef>
+						<fe:Field name="date" type="String"/>
+					</fe:FieldDef>
+				</fe:Stream>
+			</fe:Output>
+		</fe:Component>
 		<fe:Link name="Link1">
 			<fe:Input name="Start1"/>
-			<fe:Output name="Velocity1"/>
+			<fe:Output name="Mapper1"/>
 			<fb:Line type="Direct"/>
 		</fe:Link>
 		<fe:Link name="Link2">
-			<fe:Input name="Velocity1"/>
+			<fe:Input name="Mapper1"/>
 			<fe:Output name="EndResponse1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+	</fe:Flow>
+	<fe:Flow id="Flow2" name="obsolete">
+		<fe:Property name="Timeout">180</fe:Property>
+		<fe:Property name="Exception"/>
+		<fe:Property name="AllowInvoke"/>
+		<fe:Property name="LogSettings" unfold="true">
+			<fe:Property name="LogName"/>
+			<fe:Property name="LogLevel">default</fe:Property>
+			<fe:Property name="OutputDefault">true</fe:Property>
+		</fe:Property>
+		<fe:Property name="CloseSession">true</fe:Property>
+		<fe:Property name="HttpExecute">false</fe:Property>
+		<fe:Component fb:x="16" fb:y="16" name="Start1" type="Start">
+			<fe:Property name="Exception"/>
+			<fe:Property name="BeginTransaction">false</fe:Property>
+			<fe:Property name="BeginCheckPoint">False</fe:Property>
+			<fe:Property name="CheckPointGroup" unfold="true">
+				<fe:Property name="Status"/>
+				<fe:Property name="RetryCount">SystemDefault</fe:Property>
+				<fe:Property name="RetryInterval">SystemDefault</fe:Property>
+				<fe:Property name="OtherServerRetry">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="RequiredRole"/>
+			<fe:Property name="ArgumentSyncFlowVariables">true</fe:Property>
+			<fe:Property name="UseHighCapacityStreams">true</fe:Property>
+			<fe:Output>
+				<fe:Stream format="Any"/>
+			</fe:Output>
+		</fe:Component>
+		<fe:Component fb:x="50" fb:y="118" name="HandbookCreateFromFolder1" type="HandbookCreateFromFolder">
+			<fe:Property name="Exception"/>
+			<fe:Property name="ConnectException"/>
+			<fe:Property name="APIException"/>
+			<fe:Property name="FileNotFoundException"/>
+			<fe:Property name="UseConnection">true</fe:Property>
+			<fe:Property name="Connection"/>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property name="ServerURL"/>
+				<fe:Property name="LoginUserName"/>
+				<fe:Property name="LoginPassword"/>
+				<fe:Property name="UseProxy">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="Directory"/>
+			<fe:Property name="FilePathDetail" unfold="true">
+				<fe:Property name="HomeDirectory">Relative</fe:Property>
+				<fe:Property name="AllowAbsolute">true</fe:Property>
+				<fe:Property name="AllowUpDir">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="Title"/>
+			<fe:Property name="KeyCode"/>
+			<fe:Property name="Category"/>
+			<fe:Property name="Started"/>
+			<fe:Property name="Erased"/>
+			<fe:Property name="Description"/>
+			<fe:Property name="CopyRight"/>
+			<fe:Property name="CopyRightLayout">1</fe:Property>
+			<fe:Property name="Downloadable">1</fe:Property>
+			<fe:Property name="ExternalAccessable">1</fe:Property>
+			<fe:Property name="SectionLayout">1</fe:Property>
+		</fe:Component>
+		<fe:Component fb:x="16" fb:y="186" name="HandbookCreate1" type="HandbookCreate">
+			<fe:Property name="Exception"/>
+			<fe:Property name="ConnectException"/>
+			<fe:Property name="APIException"/>
+			<fe:Property name="UseConnection">true</fe:Property>
+			<fe:Property name="Connection"/>
+			<fe:Property name="ConnectionInfo" unfold="true">
+				<fe:Property name="ServerURL"/>
+				<fe:Property name="LoginUserName"/>
+				<fe:Property name="LoginPassword"/>
+				<fe:Property name="UseProxy">true</fe:Property>
+			</fe:Property>
+			<fe:Property name="Title"/>
+			<fe:Property name="Keycode"/>
+		</fe:Component>
+		<fe:Link name="Link1">
+			<fe:Input name="Start1"/>
+			<fe:Output name="HandbookCreateFromFolder1"/>
+			<fb:Line type="Direct"/>
+		</fe:Link>
+		<fe:Link name="Link2">
+			<fe:Input name="HandbookCreateFromFolder1"/>
+			<fe:Output name="HandbookCreate1"/>
 			<fb:Line type="Direct"/>
 		</fe:Link>
 	</fe:Flow>
