@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fe:External name="ExVar1" xmlns:fe="http://www.infoteria.com/asteria/flowengine">
+	<fe:Variables type="constants">
+		<fe:Field id="39de1708-c374-4aa0-adc4-a37a99df59e5" name="init" readonly="true" type="String"/>
+	</fe:Variables>
+</fe:External>
