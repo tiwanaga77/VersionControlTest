@@ -15,7 +15,6 @@
 	<fe:External filepath="ExVar1.xvar" name="ExVar1">
 		<fe:Variables type="constants">
 			<fe:Field id="39de1708-c374-4aa0-adc4-a37a99df59e5" name="init" readonly="true" type="String"/>
-			<fe:Field id="d73652d2-77c0-409c-be1d-9d2dbf04f4e9" name="add" readonly="true" type="String"/>
 		</fe:Variables>
 	</fe:External>
 	<fe:Flow id="Flow1" name="Flow1">

@@ -2,6 +2,5 @@
 <fe:External name="ExVar1" xmlns:fe="http://www.infoteria.com/asteria/flowengine">
 	<fe:Variables type="constants">
 		<fe:Field id="39de1708-c374-4aa0-adc4-a37a99df59e5" name="init" readonly="true" type="String"/>
-		<fe:Field id="8558eefe-d36d-4ebf-b3d5-c1360365bebf" name="add2" readonly="true" type="String"/>
 	</fe:Variables>
 </fe:External>
